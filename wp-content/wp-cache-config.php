@@ -5,7 +5,9 @@ WP-Cache Config Sample File
 See wp-cache.php for author details.
 */
 
-$cache_page_secret = '718dc723b08d9d9147b4ef6fc8f2696c';
+$wp_cache_home_path = '/RubxterPortfolio/';
+$wp_cache_slash_check = 1;
+$cache_page_secret = '258adc83d30f92d96845c0292230fb24';
 $cache_time_interval = 600;
 if ( ! defined('WPCACHEHOME') )
 	define( 'WPCACHEHOME', WP_CONTENT_DIR . "/plugins/wp-super-cache/" );
@@ -33,7 +35,7 @@ $cache_rebuild_files = 1;
 $wp_cache_mutex_disabled = 1;
 
 // Just modify it if you have conflicts with semaphores
-$sem_id = 1879828286;
+$sem_id = 1518249579;
 
 if ( '/' != substr($cache_path, -1)) {
 	$cache_path .= '/';
@@ -79,7 +81,7 @@ $wp_cache_not_logged_in = 0;
 $wp_cache_clear_on_post_edit = 0;
 $wp_cache_hello_world = 0;
 $wp_cache_mobile_enabled = 0;
-$wp_cache_cron_check = 0;
+$wp_cache_cron_check = 1;
 $wp_cache_mfunc_enabled = 0;
 $wp_cache_make_known_anon = 0;
 $wp_cache_refresh_single_only = 0;
