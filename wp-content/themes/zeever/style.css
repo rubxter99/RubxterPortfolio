@@ -1,12 +1,13 @@
 @charset "UTF-8";
+
 /*
 	Theme Name: Zeever
 	Description: Zeever is a modern, responsive, and elegant dark style theme template for WordPress fullsite editing and fully compatible with Gutenverse plugin. Zeever’s created especially for Digital Agency, Creative Agency, Online Portfolio, Designer and Freelancer website for companies or individuals that need a beautiful landing page for their business. The templates includes both core version and Gutenverse plugin version, also has core and Gutenverse block patterns ready so you can start mix and match your template parts as you desire. The templates is built ready so you don't need to build it from scratch. We want to make your experience using WordPress fullsite editor more convenient.
 	Author: Jegstudio
 	Author URI: https://gutenverse.com
   Theme URI: https://gutenverse.com/zeever-theme
-	Version: 1.1.0
-	Stable tag: 1.1.0
+	Version: 1.1.5
+	Stable tag: 1.1.5
 	Requires at least: 5.9
 	Tested up to: 6.1
 	Requires PHP: 7.0
@@ -163,8 +164,8 @@ figcaption {
   font-weight: 400;
 }
 
-.wp-site-blocks > * {
-  margin-top: 0!important;
+.wp-site-blocks>* {
+  margin-top: 0 !important;
 }
 
 .wp-block-post-comments input[type=submit] {
@@ -177,8 +178,8 @@ figcaption {
   margin-top: 32px;
 }
 
-.wp-block-navigation__submenu-container > li {
-  color: var(--wp--preset--color--black)!important;
+.wp-block-navigation__submenu-container>li {
+  color: var(--wp--preset--color--black) !important;
 }
 
 @media (max-width: 782px) {

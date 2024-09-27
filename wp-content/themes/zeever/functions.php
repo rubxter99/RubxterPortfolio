@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-defined( 'ZEEVER_VERSION' ) || define( 'ZEEVER_VERSION', '1.1.0' );
+defined( 'ZEEVER_VERSION' ) || define( 'ZEEVER_VERSION', '1.1.3' );
 defined( 'ZEEVER_DIR' ) || define( 'ZEEVER_DIR', trailingslashit( get_template_directory() ) );
 defined( 'ZEEVER_URI' ) || define( 'ZEEVER_URI', trailingslashit( get_template_directory_uri() ) );
 

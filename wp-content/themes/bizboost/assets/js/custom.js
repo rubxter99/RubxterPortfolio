@@ -92,7 +92,7 @@ let blinkerField = document.querySelector(".social-controller svg.search");
 if (blinkerField !== null) {
   blinkerField.addEventListener("click", function () {
     var searchInput = document.querySelector(".wp-block-search__input");
-        window.setTimeout(() => searchInput.focus(), 0);
+    window.setTimeout(() => searchInput.focus(), 0);
   });
 }
 
@@ -192,5 +192,4 @@ function teamHoverOn() {
 function teamHoverOff() {
   teamCursor.classList.remove("team__active")
 }
-
 

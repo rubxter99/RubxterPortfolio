@@ -1,7 +1,7 @@
 === BizBoost ===
 Contributors: catchthemes
 Requires at least: 5.9
-Tested up to: 6.2
+Tested up to: 6.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -26,6 +26,28 @@ When changing the theme style, it is recommended to clear the template customiza
 6. Navigate to Appearance -> Editor in your admin panel and customize to taste.
 
 == Changelog ==
+
+= 2.0 (Released: September 12, 2024) =
+* Added: Order confirmation page and updated design
+* Bug Fixed: WP block heading color issue inside Cover Block and font size issues
+* Updated: Footer pattern
+* Updated: My account page design and icon size
+* Updated: Form design issues in checkout
+* updated: Removed Lorem text from patterns
+* Updated: Normal font size slug in theme json conflicting with WordPress default slug
+* Updated: Huge font size slug in theme json conflicting with WordPress default slug
+* Updated: WordPress 6.6 ready
+
+= 1.0.4 (Released: May 16, 2024) =
+* Added: Cart and Checkout template
+* Updated: Minor CSS
+
+= 1.0.3 (Released: April 10, 2024) =
+* Bug Fixed: Cursor effect issue in firefox
+* Updated: WordPress 6.5 ready
+
+= 1.0.2 (Released: March 26, 2024) =
+* Updated: WordPress 6.4 ready
 
 = 1.0.1 (Released: April 20, 2023) =
 * Added: Info buttons and message

@@ -3,6 +3,43 @@ window.addEventListener( 'load', function(e) {
 	astra_onload_function();
 });
 
+// Function to add block editor dynamic styles. 
+function blockEditorDynamicStyles() {
+	setTimeout(() => {
+		const iframes = document.getElementsByTagName('iframe');
+		if (!iframes?.length) {
+			return;
+		}
+
+		const cloneLinkElement = (id) => {
+			const element = document.getElementById(id);
+			return element ? element.cloneNode(true) : null;
+		}
+
+		const googleFontsStyle = cloneLinkElement('astra-google-fonts-css');
+
+		const appendLinkIfNotExists = (iframeDoc, clonedLink, linkId) => {
+			if (!clonedLink) return;
+			const existingLink = iframeDoc.getElementById(linkId);
+			if (existingLink) return;
+			iframeDoc.head.appendChild(clonedLink);
+		}
+
+		for (const iframe of iframes) {
+			try {
+				const iframeDoc = iframe?.contentWindow?.document || iframe?.contentDocument;
+				if (!iframeDoc?.head) {
+					continue;
+				}
+				appendLinkIfNotExists(iframeDoc, googleFontsStyle, 'astra-google-fonts-css');
+			} catch {
+				// Access denied to iframe document.
+			}
+		}
+	}, 1000);
+}
+
+
 function addTitleVisibility() {
 	let titleVisibility = document.querySelector( '.title-visibility' ),
 		titleBlock = document.querySelector( '.edit-post-visual-editor__post-title-wrapper' ),
@@ -26,9 +63,17 @@ function addTitleVisibility() {
 			editorDocument = iframe.contentWindow.document || iframe.contentDocument;
 		}
 
-		titleVisibility = editorDocument.querySelector( '.title-visibility' );
-		titleBlock = editorDocument.querySelector( '.edit-post-visual-editor__post-title-wrapper' );
-	}
+        // Addressed the WordPress 6.5 issue involving an extraneous iframe layer.
+        if ( ! iframe && astraColors.ast_wp_version_higher_6_4 ) {
+            let _iframe = document.querySelector('.editor-canvas__iframe') || document.querySelector('.block-editor-iframe__scale-container iframe[name="editor-canvas"]');
+            editorDocument = _iframe ? _iframe.contentWindow.document : editorDocument;
+
+            if (editorDocument) {
+                titleVisibility = editorDocument.querySelector('.title-visibility');
+                titleBlock = editorDocument.querySelector('.edit-post-visual-editor__post-title-wrapper');
+            }
+        }
+    }
 
 	if( null !== titleBlock && null === titleVisibility ) {
 		let titleVisibilityTrigger = '<span class="ast-title title-visibility" data-tooltip="Disable Title"> <svg xmlns="http://www.w3.org/2000/svg" width="0px" viewBox="0 0 576 512"><path d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"></path></svg> </span>';
@@ -44,11 +89,12 @@ function addTitleVisibility() {
 		let titleVisibilityTriggerElement = editorDocument.querySelector( '.title-visibility' ),
 			titleVisibilityWrapper = editorDocument.querySelector( '.edit-post-visual-editor__post-title-wrapper' );
 
-		if( 'disabled' === postTitleOption && ! titleVisibilityWrapper.classList.contains( 'invisible' ) ) {
-			titleVisibilityWrapper.classList.add( 'invisible' );
-		} else {
-			titleVisibilityWrapper.classList.remove( 'invisible' );
-		}
+        if (titleVisibilityWrapper) {
+            if ('disabled' === postTitleOption && !titleVisibilityWrapper.classList.contains('invisible')) {
+                titleVisibilityWrapper.classList.add('invisible');
+            } else {
+                titleVisibilityWrapper.classList.remove('invisible');
+            }
 
 		titleVisibilityTriggerElement.addEventListener("click", function() {
 			let metaTitleOptions = postTitleOption || '';
@@ -80,6 +126,36 @@ function addTitleVisibility() {
 				);
 			}
 		});
+	}
+}
+}
+
+function siteLogoImageChange() {
+	let mobileLogoState = astraColors.mobile_logo_state;
+
+	if (!mobileLogoState) {
+		return;
+	}
+
+	let mobileLogo = astraColors.mobile_logo;
+	// Added OR condtion to check iframe content from WordPress 6.6 structure.
+	let iframe = document.querySelector('.editor-canvas__iframe') || document.querySelector('.block-editor-iframe__scale-container iframe[name="editor-canvas"]');
+
+	if (iframe) {
+		let is_desktop = iframe.contentWindow.document.querySelector(
+			".is-desktop-preview"
+		);
+
+		if (!is_desktop) {
+			let iframeDoc =
+				iframe.contentDocument || iframe.contentWindow.document;
+			let logoElement = iframeDoc.querySelector(".custom-logo");
+
+			if (logoElement) {
+				// Updating logo in the editor iframe preview with the mobile logo.
+				logoElement.setAttribute("src", mobileLogo);
+			}
+		}
 	}
 }
 
@@ -116,8 +192,12 @@ function astra_onload_function() {
 			var titleBlock = document.querySelector( '.edit-post-visual-editor__post-title-wrapper' ),
 				editorDocument = document;
 
+			// Excuting responsive site logo change function. 
+			siteLogoImageChange();
 			// Adding title visibility icon on wp.data.subscribe.
 			addTitleVisibility();
+			// Block editor dynamic style function.
+			blockEditorDynamicStyles();
 			if ( astraColors.ast_wp_version_higher_6_3 ) {
 				let desktopPreview = document.getElementsByClassName('is-desktop-preview'),
 					tabletPreview = document.getElementsByClassName('is-tablet-preview'),
@@ -135,13 +215,17 @@ function astra_onload_function() {
 					editorDocument = iframe.contentWindow.document || iframe.contentDocument;
 				}
 
+				// Addressed the WordPress 6.5 issue involving an extraneous iframe layer.
+				if ( ! iframe && astraColors.ast_wp_version_higher_6_4 ) {
+					const _iframe = document.querySelector('.editor-canvas__iframe') || document.querySelector('.block-editor-iframe__scale-container iframe[name="editor-canvas"]');					
+					
+					if ( !! _iframe ){
+						editorDocument = _iframe.contentWindow.document ;
+					}
+				}
+
 				titleBlock = editorDocument.querySelector( '.edit-post-visual-editor__post-title-wrapper' );
 
-				// Add Google Fonts CSS to iframe.
-				var fontCss = document.getElementById('astra-google-fonts-css');
-				if ( fontCss && editorDocument && editorDocument.head ) {
-					editorDocument.head.appendChild( fontCss.cloneNode(true) );
-				}
 			}
 
 			// Compatibility for updating layout in editor with direct reflection.
@@ -168,7 +252,7 @@ function astra_onload_function() {
 								"ast-page-builder-template",
 								"ast-separate-container",
 								"ast-narrow-container"
-							);							
+							);
 						}
 						break;
 					case "content-boxed-container":
@@ -186,7 +270,7 @@ function astra_onload_function() {
 								"ast-page-builder-template",
 								"ast-plain-container",
 								"ast-narrow-container"
-							);							
+							);
 						}
 						break;
 					case "boxed-container":
@@ -208,7 +292,7 @@ function astra_onload_function() {
 								"ast-page-builder-template",
 								"ast-plain-container",
 								"ast-narrow-container"
-							);						
+							);
 						}
 						break;
 					case "page-builder-template":
@@ -226,7 +310,7 @@ function astra_onload_function() {
 								"ast-plain-container",
 								"ast-separate-container",
 								"ast-narrow-container"
-							);						
+							);
 						}
 						break;
 					case "narrow-container":
@@ -244,7 +328,7 @@ function astra_onload_function() {
 								"ast-plain-container",
 								"ast-separate-container",
 								"ast-page-builder-template"
-							);					
+							);
 						}
 						break;
 					default:
@@ -331,13 +415,21 @@ function astra_onload_function() {
 
 			// Narrow + Boxed compatibility in editor.
 			if ( 'narrow-width-container' === contentLayout && ( 'boxed' === contentStyle || 'default' === contentStyle && is_content_style_boxed ) ) {
-				const editorArea = document.querySelector('.edit-post-visual-editor__content-area');
+				let editorArea = document.querySelector('.edit-post-visual-editor__content-area');
+				if ( ! editorArea ) {
+					editorArea = document.querySelector('.edit-post-visual-editor');
+				}
 				if ( editorArea ) {
 					editorArea.style.padding = '20px';
 				}
 			}
 			else {
-				const editorArea = document.querySelector('.edit-post-visual-editor__content-area');
+				let editorArea = document.querySelector('.edit-post-visual-editor__content-area');
+
+				if ( ! editorArea ) {
+					editorArea = document.querySelector('.edit-post-visual-editor');
+				}
+
 				if ( editorArea ) {
 					editorArea.style.padding = '0px';
 				}
@@ -438,63 +530,63 @@ function astra_onload_function() {
 			}
 
 			// Live reflections for page background setting.
-			const backgroundToggle = (undefined !== wp.data.select('core/editor') &&
-			null !== wp.data.select('core/editor') &&
-			undefined !== wp.data.select('core/editor').getEditedPostAttribute('meta') &&
-			wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-enabled'])
-			? wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-enabled']
-			: 'default';
+			if ( astraColors.is_astra_pro_colors_activated ) {
+				const backgroundToggle = (undefined !== wp.data.select('core/editor') &&
+				null !== wp.data.select('core/editor') &&
+				undefined !== wp.data.select('core/editor').getEditedPostAttribute('meta') &&
+				wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-enabled'])
+				? wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-enabled']
+				: 'default';
 
-			if ( 'enabled' === backgroundToggle ) {
-				if ( isUnboxedContainer ) {
-					updatePageBackground( false, isUnboxedContainer );
+				if ( 'enabled' === backgroundToggle ) {
+					if ( isUnboxedContainer ) {
+						updatePageBackground( false, isUnboxedContainer );
+					}
+					else {
+						updatePageBackground();
+					}
 				}
-				else {
-					updatePageBackground();
-				}
-			}
-			else if ( 'default' === backgroundToggle ) {
-				if ( isUnboxedContainer ) {
-					updatePageBackground( true, isUnboxedContainer );
-				}
-				else {
+				else if ( 'default' === backgroundToggle ) {
 					updatePageBackground( true );
 				}
 			}
 
 		}, 1 );
 	});
+
+	// Redirect to Site Builder on click of "View Posts" Icon if Site Builder layout.
+	if ( document && document.body ) {
+		const isSiteBuilderLayout = document.body.classList.contains( 'post-type-astra-advanced-hook' );
+		if ( isSiteBuilderLayout ) {
+			const viewPostsIcon = document.querySelector( '#editor .interface-navigable-region .edit-post-header > div a.components-button.edit-post-fullscreen-mode-close' );
+			if ( viewPostsIcon ) {
+				viewPostsIcon.addEventListener( 'click', function(e) {
+					e.preventDefault();
+					window.location.href = astraColors.site_builder_url;
+				});
+			}
+		}
+	}
+
 }
 
 /*
 * Updates the page background css from the color picker.
 */
 const updatePageBackground = ( apply_customizer_default = false, isUnboxedContainer = false ) => {
-	
-	let bgObj = (undefined !== wp.data.select('core/editor') &&
-    null !== wp.data.select('core/editor') &&
-    undefined !== wp.data.select('core/editor').getEditedPostAttribute('meta') &&
-    wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-meta'])
-    ? wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-meta']
-    : 'default';
-
-	let contentObj = (undefined !== wp.data.select('core/editor') &&
-    null !== wp.data.select('core/editor') &&
-    undefined !== wp.data.select('core/editor').getEditedPostAttribute('meta') &&
-    wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-content-background-meta'])
-    ? wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-content-background-meta']
-    : 'default';
-
-	if ( apply_customizer_default ) {
-		bgObj = astraColors.customizer_site_bg_obj;
-		contentObj = astraColors.customizer_content_bg_obj;
-	}
 
 	// Document as per wp version.
-	editorDoc = document;
-	let desktopPreview = document.getElementsByClassName('is-desktop-preview'),
-		tabletPreview = document.getElementsByClassName('is-tablet-preview'),
-		mobilePreview = document.getElementsByClassName('is-mobile-preview'),
+	let editorDoc = document;
+	
+	let _iframe = document.querySelector("#editor iframe.editor-canvas__iframe") || document.querySelector('.block-editor-iframe__scale-container iframe[name="editor-canvas"]');
+	
+	if (_iframe && astraColors.ast_wp_version_higher_6_4) {
+		editorDoc = _iframe.contentWindow.document;
+	}
+
+	let desktopPreview = editorDoc.getElementsByClassName('is-desktop-preview'),
+		tabletPreview = editorDoc.getElementsByClassName('is-tablet-preview'),
+		mobilePreview = editorDoc.getElementsByClassName('is-mobile-preview'),
 		devicePreview = desktopPreview[0];
 	if ( astraColors.ast_wp_version_higher_6_3 ) {
 
@@ -510,6 +602,53 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 		}
 	}
 
+	if ( apply_customizer_default ) {
+
+		if ( document ) {
+			const pageBgWrapper = document.querySelector('#editor .edit-post-visual-editor');
+
+			if ( pageBgWrapper ) {
+				pageBgWrapper.style['background-color'] = '';
+				pageBgWrapper.style['background-image'] = '';
+				pageBgWrapper.style['background-size'] = '';
+				pageBgWrapper.style['background-position'] = '';
+				pageBgWrapper.style['background-repeat'] = '';
+				pageBgWrapper.style['background-attachment'] = '';
+
+			}
+		}
+
+		if ( editorDoc ) {
+
+			const contentBgWrapper = editorDoc.querySelector('.editor-styles-wrapper');
+
+			if ( contentBgWrapper ) {
+				contentBgWrapper.style['background-color'] = '';
+				contentBgWrapper.style['background-image'] = '';
+				contentBgWrapper.style['background-size'] = '';
+				contentBgWrapper.style['background-position'] = '';
+				contentBgWrapper.style['background-repeat'] = '';
+				contentBgWrapper.style['background-attachment'] = '';
+			}
+		}
+
+		return;
+	}
+
+	let bgObj = (undefined !== wp.data.select('core/editor') &&
+    null !== wp.data.select('core/editor') &&
+    undefined !== wp.data.select('core/editor').getEditedPostAttribute('meta') &&
+    wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-meta'])
+    ? wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-page-background-meta']
+    : 'default';
+
+	let contentObj = (undefined !== wp.data.select('core/editor') &&
+    null !== wp.data.select('core/editor') &&
+    undefined !== wp.data.select('core/editor').getEditedPostAttribute('meta') &&
+    wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-content-background-meta'])
+    ? wp.data.select('core/editor').getEditedPostAttribute('meta')['ast-content-background-meta']
+    : 'default';
+
 	if ( desktopPreview.length > 0 ) {
 
 		// Get the background object css values and update page background.
@@ -517,7 +656,10 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 		applyStylesToElement('#editor .edit-post-visual-editor', desktopCSS, document );
 
 		// Check current layout.
-		is_boxed_based_layout = document.querySelector('body').contains( document.querySelector('.ast-separate-container') );
+		is_boxed_based_layout = false;
+		if ( document && document.querySelector('body') ) {
+			is_boxed_based_layout = document.querySelector('body').classList.contains('ast-separate-container');
+		}
 
 		if ( astraColors.apply_content_bg_fullwidth && ( ! is_boxed_based_layout ) ) {
 
@@ -558,10 +700,13 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 	else if ( tabletPreview.length > 0 ) {
 
 		// Check current layout.
-		is_boxed_based_layout = document.querySelector('body').contains( document.querySelector('.ast-separate-container') );
+		is_boxed_based_layout = false;
+		if ( document && document.querySelector('body') ) {
+			is_boxed_based_layout = document.querySelector('body').classList.contains('ast-separate-container');
+		}
 
 		if ( astraColors.apply_content_bg_fullwidth && ( ! is_boxed_based_layout ) ) {
-			
+
 			/** Fullwidth with Content Bg */
 			// Get the background object css values and update page content background.
 			const tabletContentCSS = astraGetResponsiveBackgroundObj(contentObj, 'tablet');
@@ -571,7 +716,7 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 			applyStylesToElement('#editor .edit-post-visual-editor', {'background-color' : '#363636'}, document );
 		}
 		else if ( ! astraColors.apply_content_bg_fullwidth && ( ! is_boxed_based_layout ) ) {
-			
+
 			/** Fullwidth with Page Bg */
 			// Get the background object css values and update page background.
 			const tabletCSS = astraGetResponsiveBackgroundObj(bgObj, 'tablet');
@@ -579,7 +724,7 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 
 		}
 		else if ( is_boxed_based_layout ) {
-			
+
 			/** Boxed Layouts with Content Bg & Page Bg */
 			// Get the background object css values and update page background.
 			const tabletCSS = astraGetResponsiveBackgroundObj(bgObj, 'tablet');
@@ -594,10 +739,13 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 	else if ( mobilePreview.length > 0 ) {
 
 		// Check current layout.
-		is_boxed_based_layout =   document.querySelector('body').contains( document.querySelector('.ast-separate-container') );
+		is_boxed_based_layout = false;
+		if ( document && document.querySelector('body') ) {
+			is_boxed_based_layout = document.querySelector('body').classList.contains('ast-separate-container');
+		}
 
 		if ( astraColors.apply_content_bg_fullwidth && ( ! is_boxed_based_layout ) ) {
-			
+
 			/** Fullwidth with Content Bg */
 			// Get the background object css values and update page content background.
 			const mobileContentCSS = astraGetResponsiveBackgroundObj(contentObj, 'mobile');
@@ -607,7 +755,7 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 			applyStylesToElement('#editor .edit-post-visual-editor', {'background-color' : '#363636'}, document );
 		}
 		else if ( ! astraColors.apply_content_bg_fullwidth && ( ! is_boxed_based_layout ) ) {
-			
+
 			/** Fullwidth with Page Bg */
 			// Get the background object css values and update page background.
 			const mobileCSS = astraGetResponsiveBackgroundObj(bgObj, 'mobile');
@@ -615,7 +763,7 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 
 		}
 		else if ( is_boxed_based_layout ) {
-			
+
 			/** Boxed Layouts with Content Bg & Page Bg */
 			// Get the background object css values and update page background.
 			const mobileCSS = astraGetResponsiveBackgroundObj(bgObj, 'mobile');
@@ -628,25 +776,23 @@ const updatePageBackground = ( apply_customizer_default = false, isUnboxedContai
 		}
 	}
 
-
 }
 
 /*
 * Dynamically applies styles to DOM element.
 */
 function applyStylesToElement( selector, styles, docObj ) {
-
-  const element = docObj.querySelector(selector);
-
-  // Remove any prior cache values if set already.
-  element.style.backgroundImage = 'none';
-
-  if (element) {
-    Object.keys(styles).forEach((property) => {
-      element.style[property] = styles[property];
-    });
-  } else {
-    console.error(`Element with selector "${selector}" not found.`);
+  if ( docObj ) {
+	  const element = docObj.querySelector(selector);
+	  if (element) {
+      // Remove any prior cache values if set already.
+  	  element.style.backgroundImage = 'none';
+	  	Object.keys(styles).forEach((property) => {
+		    element.style[property] = styles[property];
+  		});
+	  } else {
+	  	console.error(`Element with selector "${selector}" not found.`);
+	  }
   }
 }
 

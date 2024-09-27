@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BizBoost\n"
 "Report-Msgid-Bugs-To: https://catchthemes.com/contact-us/\n"
-"POT-Creation-Date: 2023-04-20 08:48-0700\n"
+"POT-Creation-Date: 2024-09-12 22:56+0545\n"
 "PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Catch Themes <info@catchthemes.com>\n"
 "Language-Team: Catch Themes <info@catchthemes.com>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "esc_html_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: inc/about.php:19
@@ -157,10 +157,11 @@ msgid "Creative Lights"
 msgstr ""
 
 #: patterns/featured-content.php:38 patterns/featured-content.php:68
-#: patterns/featured-content.php:98
+#: patterns/featured-content.php:98 patterns/header-media-no-image.php:44
+#: patterns/sidebar.php:20
 msgid ""
-"Lorem ipsum dolor sit amet consecte tur adipiscing elit integer fermentum in "
-"orci lorem ipsum."
+"We collaborate with smart and creative people to build awesome WordPress Full "
+"Site Editing Themes."
 msgstr ""
 
 #: patterns/featured-content.php:44 patterns/featured-content.php:74
@@ -176,15 +177,22 @@ msgstr ""
 msgid "Vintage Camera"
 msgstr ""
 
-#: patterns/footer-three-columns.php:24
-msgid "Newsletter Signup"
+#: patterns/footer-three-columns.php:17
+msgid "About Bizboost"
 msgstr ""
 
-#: patterns/footer-three-columns.php:41
+#: patterns/footer-three-columns.php:21
+msgid ""
+"BizBoost is a free multipurpose corporate WordPress Block theme that comes "
+"with a dark and minimal design. The block-based theme is beautifully crafted "
+"for all kinds of businesses who want to promote their business online."
+msgstr ""
+
+#: patterns/footer-three-columns.php:31
 msgid "Quick Links"
 msgstr ""
 
-#: patterns/footer-three-columns.php:53
+#: patterns/footer-three-columns.php:43
 msgid "Customer Support"
 msgstr ""
 
@@ -212,12 +220,6 @@ msgstr ""
 
 #: patterns/header-media-no-image.php:37
 msgid "experiences."
-msgstr ""
-
-#: patterns/header-media-no-image.php:44
-msgid ""
-"We collaborate with smart and creative people to build awesome WordPress Full "
-"Site Editing Themes."
 msgstr ""
 
 #: patterns/header-media-no-image.php:49 patterns/hero-content.php:40
@@ -289,12 +291,6 @@ msgstr ""
 
 #: patterns/sidebar-products.php:66
 msgid "Filter by Color"
-msgstr ""
-
-#: patterns/sidebar.php:20
-msgid ""
-"Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Maecenas odio "
-"lacus, dignissim sollicitudin finibus commodo, rhoncus et ante."
 msgstr ""
 
 #: patterns/sidebar.php:35

@@ -551,7 +551,6 @@
       pointer-events: none;
       margin-block-start: 0 !important;
       z-index: 9999;
-      transition: all 0.00003s ease-in-out;
       animation: pulse .5s cubic-bezier(.51, 0, 0.4, .5) alternate infinite;
       transform: translate(-50%, -50%) scale(1);
     }
@@ -590,6 +589,10 @@
       width: 70px;
       height: 70px;
       animation: cubic-bezier(.51, 0, 0.4, .9);
+    }
+
+    .custom-cursor.menu__active.dark-overlay {
+      background: rgba(0, 0, 0, 0.15);
     }
 
     .custom-cursor.team__active:before {

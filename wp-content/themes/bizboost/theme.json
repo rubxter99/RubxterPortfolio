@@ -101,9 +101,9 @@
 					"name": "Upper Heading"
 				},
 				{
-					"slug": "normal",
+					"slug": "body-default",
 					"size": "clamp(18px,1.6vw,20px)",
-					"name": "Normal"
+					"name": "Body Default"
 				},
 				{
 					"slug": "content-heading",
@@ -126,7 +126,7 @@
 					"name": "Product Heading"
 				},
 				{
-					"slug": "huge",
+					"slug": "huge-display",
 					"size": "clamp(42px,5.2vw,80px)",
 					"name": "Huge (Display)"
 				},
@@ -335,7 +335,7 @@
 					}
 				},
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--normal)",
+					"fontSize": "var(--wp--preset--font-size--body-default)",
 					"lineHeight": "var(--wp--custom--typography--line-height--paragraph)",
 					"fontWeight": "var(--wp--custom--typography--font-weight--regular)"
 				},
@@ -355,7 +355,7 @@
 					}
 				},
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--normal)",
+					"fontSize": "var(--wp--preset--font-size--body-default)",
 					"lineHeight": "var(--wp--custom--typography--line-height--paragraph)",
 					"fontWeight": "var(--wp--custom--typography--font-weight--regular)"
 				},
@@ -478,7 +478,7 @@
 					"background": "var(--wp--preset--color--secondary)"
 				},
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--normal)",
+					"fontSize": "var(--wp--preset--font-size--body-default)",
 					"lineHeight": "var(--wp--custom--typography--line-height--paragraph)",
 					"fontWeight": "var(--wp--custom--typography--font-weight--regular)",
 					"fontFamily": "'Courier Prime', monospace"
@@ -498,7 +498,7 @@
 					"background": "var(--wp--preset--color--secondary)"
 				},
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--normal)",
+					"fontSize": "var(--wp--preset--font-size--body-default)",
 					"lineHeight": "var(--wp--custom--typography--line-height--paragraph)",
 					"fontWeight": "var(--wp--custom--typography--font-weight--regular)",
 					"fontFamily": "'Courier Prime', monospace"
@@ -546,7 +546,7 @@
 		"typography": {
 			"fontFamily": "var(--wp--preset--font-family--poppins)",
 			"lineHeight": "var(--wp--custom--typography--line-height--paragraph)",
-			"fontSize": "var(--wp--preset--font-size--normal)",
+			"fontSize": "var(--wp--preset--font-size--body-default)",
 			"fontWeight": 400
 		},
 		"elements": {

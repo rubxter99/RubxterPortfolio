@@ -5,9 +5,9 @@ Author: Catch Themes
 Author URI: https://catchthemes.com
 Description: BizBoost is a free multipurpose corporate WordPress Block theme that comes with a dark and minimal design. The block-based theme is beautifully crafted for all kinds of businesses who want to promote their business online. This theme is ideal for building corporate, blog, portfolio, eCommerce, freelance, and many more websites. This outstanding corporate theme can adapt to any market niche and provides an intuitive interface. It comes with many amazing features that help your company to shine in the business field. BizBoost is a simple and clean yet feature-rich multipurpose block theme that provides a flexible framework for any website. Moreover, the theme comes with 12+ block patterns, 15 FSE Template, and 8 Template Parts that help you to build an amazing corporate site the way you want. Some of the block patterns are Featured Content, Footer with Three Columns, Footer, Header Has Nav Centered, Header Media No Image, Header, Hero Content, Recent Products, Promotional Contact, Recent Blog Posts, Stats, Sidebar Products, and many more. All of the block patterns, templates, and template parts in BizBoost adapt to all screen sizes and are fully responsive and highly customizable.
 Requires at least: 5.9
-Tested up to: 6.2
+Tested up to: 6.6
 Requires PHP: 5.6
-Version: 1.0.1
+Version: 2.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: bizboost
@@ -2128,6 +2128,10 @@ footer .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigat
   width: auto;
   padding: 10px; }
 
+/* Wp Block Heading Color Issue in Wp Block Cover After Wordpress 6.6.1 - For Frontend*/
+:root .wp-block-cover:not(.wp-block-header-media-no-image) :where(.wp-block-heading) {
+  color: inherit; }
+
 /* --- 4
 -------------------------------------------------------- */
 /* --- Block Woo-Commerce
@@ -2248,7 +2252,7 @@ footer .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigat
 .woocommerce ul.products li.product h3,
 .wc-block-components-product-title a,
 .woocommerce ul.products li.product .woocommerce-loop-product__title {
-  font-size: var(--wp--preset--font-size--normal); }
+  font-size: var(--wp--preset--font-size--body-default); }
 
 ul.wc-block-grid__products h2.wc-block-components-product-title.wc-block-grid__product-title {
   margin: 0;
@@ -2310,6 +2314,8 @@ ul.wc-block-grid__products h2.wc-block-components-product-title.wc-block-grid__p
 .wc-block-grid__products {
   margin: 0 -15px 0; }
 
+.wc-block-grid .wc-block-grid__product-onsale,
+.wc-block-grid__product-image .wc-block-grid__product-onsale,
 .wc-block-components-product-sale-badge,
 .woocommerce span.onsale,
 .wc-block-grid__product-onsale {
@@ -2325,7 +2331,8 @@ ul.wc-block-grid__products h2.wc-block-components-product-title.wc-block-grid__p
   font-weight: 700;
   border-radius: 0px;
   left: 14px;
-  top: 14px; }
+  top: 14px;
+  right: auto; }
 
 .woocommerce ul.products li.product .onsale {
   left: 14px;
@@ -2411,7 +2418,7 @@ ul.wc-block-grid__products h2.wc-block-components-product-title.wc-block-grid__p
   text-transform: uppercase;
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: var(--wp--preset--color--body-text);
   padding: 14px;
   display: block; }
 
@@ -2499,10 +2506,11 @@ legend {
   color: var(--wp--preset--color--body-text); }
 
 .woocommerce-page .input-text {
-  padding: 0.9rem 0.4rem 0.9rem 0.9rem; }
+  padding: 0.7rem 0.4rem; }
 
 .woocommerce .quantity .qty {
-  width: 4.5em; }
+  width: 4.5em;
+  margin-right: 0 !important; }
 
 .woocommerce-review-link,
 .woocommerce div.product p.price ins,
@@ -2559,8 +2567,10 @@ legend {
 .woocommerce-page label {
   font-weight: var(--wp--custom--typography--font-weight--bold);
   text-transform: uppercase;
-  font-size: var(--wp--preset--font-size--tiny);
-  display: block; }
+  font-size: var(--wp--preset--font-size--tiny); }
+
+.woocommerce-checkout #payment div.payment_box {
+  color: var(--wp--preset--color--foreground); }
 
 .woocommerce-page .comment-form-cookies-consent label {
   display: inline-block;
@@ -2589,13 +2599,8 @@ legend {
   margin: 0; }
 
 .woocommerce-page .summary form.cart label a {
-  background: var(--wp--preset--color--primary);
   padding: 7px 14px;
   border-radius: 4px; }
-
-.woocommerce-page .summary form.cart label a:hover {
-  background-color: var(--wp--preset--color--foreground);
-  color: var(--wp--preset--color--background); }
 
 .woocommerce div.product form.cart .woocommerce-variation-description p {
   font-size: var(--wp--preset--font-size--medium); }
@@ -2735,9 +2740,6 @@ table.variations {
   padding: 21px 0;
   margin-bottom: 42px; }
 
-.woocommerce button.button.alt.disabled {
-  background-color: var(--wp--preset--color--text-link); }
-
 .wp-block-widget-area .wc-block-featured-category h2,
 .wp-block-widget-area .wc-block-featured-product h2 {
   font-size: var(--wp--custom--typography--font-size--heading-four);
@@ -2789,7 +2791,11 @@ table.variations {
 .woocommerce .woocommerce-breadcrumb {
   font-size: 14px;
   font-size: 0.875rem;
-  margin: 0; }
+  margin: 0;
+  padding: 14px 0; }
+
+.woocommerce .catch-breadcrumb .woocommerce-breadcrumb {
+  padding: 0; }
 
 .woocommerce .woocommerce-breadcrumb a {
   color: var(--wp--preset--color--foreground);
@@ -2926,10 +2932,6 @@ ul.wc-block-grid__products li {
   background-color: var(--wp--preset--color--secondary);
   padding: 35px;
   margin-top: 35px; }
-
-.woocommerce-page .woocommerce-cart-form #coupon_code,
-.woocommerce-page .woocommerce-cart-form .actions .button {
-  height: auto; }
 
 .woocommerce #respond input#submit.disabled,
 .woocommerce #respond input#submit:disabled,
@@ -3109,16 +3111,6 @@ label.checkbox.woocommerce-form__label.woocommerce-form__label-for-checkbox.chec
   position: relative;
   width: 95px; }
 
-.wc-block-mini-cart__footer-actions .wc-block-components-button:not(.is-link).contained {
-  background-color: var(--wp--preset--color--text-link);
-  color: var(--wp--preset--color--color-light); }
-
-.wc-block-mini-cart__footer-actions .wc-block-components-button:not(.is-link).contained:hover,
-.wc-block-mini-cart__footer-actions .wc-block-components-button:not(.is-link).contained:focus {
-  background-color: var(--wp--preset--color--foreground);
-  color: var(--wp--preset--color--color-light);
-  opacity: 1; }
-
 .wc-block-components-drawer,
 .wp-block-woocommerce-mini-cart-contents {
   background-color: var(--wp--preset--color--secondary);
@@ -3138,9 +3130,8 @@ h2.wc-block-mini-cart__title {
 table.wc-block-cart-items .wc-block-cart-items__row .wc-block-components-product-name {
   text-decoration: none; }
 
-.is-mobile table.wc-block-cart-items .wc-block-cart-items__row {
-  border-top: 1px solid var(--wp--preset--color--border-color);
-  padding: 21px 0; }
+table.wc-block-cart-items .wc-block-cart-items__row {
+  border-top: 1px solid var(--wp--preset--color--border-color); }
 
 .wc-block-mini-cart__footer {
   border-top: 1px solid var(--wp--preset--color--border-color); }
@@ -3190,18 +3181,20 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
   color: var(--wp--preset--color--primary); }
 
 .wc-block-mini-cart__footer .wc-block-mini-cart__footer-actions .wc-block-mini-cart__footer-cart.wc-block-components-button {
-  border: 1px solid var(--wp--preset--color--border-color);
+  border: 1px solid var(--wp--preset--color--primary);
   box-shadow: none;
-  color: var(--wp--preset--color--foreground); }
+  color: var(--wp--preset--color--foreground);
+  border-radius: 30px; }
 
 .wc-block-components-button:not(.is-link).contained,
 .wc-block-components-button:not(.is-link).contained:active,
 .wc-block-components-button:not(.is-link).contained:disabled,
 .wc-block-components-button:not(.is-link).contained:focus,
 .wc-block-components-button:not(.is-link).contained:hover {
-  background-color: var(--wp--preset--color--border-color);
+  background-color: var(--wp--preset--color--primary);
   color: var(--wp--preset--color--foreground);
-  transition: all 0.3s ease-in-out; }
+  transition: all 0.3s ease-in-out;
+  border-radius: 30px; }
 
 .wc-block-components-button:not(.is-link).contained:hover,
 .wc-block-components-button:not(.is-link).contained:focus,
@@ -3213,8 +3206,8 @@ table.wc-block-cart-items .wc-block-cart-items__row .wc-block-cart-item__quantit
 .wc-block-components-button:not(.is-link).contained:hover,
 .wc-block-mini-cart__footer .wc-block-mini-cart__footer-actions .wc-block-mini-cart__footer-cart.wc-block-components-button:hover,
 .wc-block-mini-cart__footer .wc-block-mini-cart__footer-actions .wc-block-mini-cart__footer-cart.wc-block-components-button:focus {
-  background: var(--wp--preset--color--text-link);
-  color: var(--wp--preset--color--color-light);
+  background: var(--wp--preset--color--foreground);
+  color: var(--wp--preset--color--background);
   border-color: transparent; }
 
 /* --- Block Hand Picked Products
@@ -3669,10 +3662,10 @@ cart-collaterals .cart_totals .shop_table td {
       content: "";
       left: 50%;
       top: 50%;
-      background: #fff;
+      background: var(--wp--preset--color--foreground);
       font-size: 16px;
       font-weight: 600;
-      color: var(--wp--preset--color--foreground);
+      color: var(--wp--preset--color--background);
       text-indent: 0;
       transform: translate(-50%, -50%);
       text-align: center; }
@@ -3732,6 +3725,405 @@ cart-collaterals .cart_totals .shop_table td {
 
 .wc-block-components-review-list-item__info {
   display: block; }
+
+/* Cart */
+.is-large.wc-block-cart .wc-block-cart-items {
+  border-bottom: 1px solid var(--wp--preset--color--border-color); }
+
+.is-large.wc-block-cart .wc-block-cart-items td {
+  border-top: 1px solid var(--wp--preset--color--border-color); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input {
+  background-color: transparent;
+  border: 1px solid var(--wp--preset--color--border-color);
+  color: var(--wp--preset--color--foreground);
+  font-size: 14px;
+  padding-top: 35px; }
+
+.wc-block-components-combobox .wc-block-components-combobox-control label.components-base-control__label,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control label.components-base-control__label {
+  color: var(--wp--preset--color--body-text);
+  font-size: 14px; }
+
+.wc-block-components-form .wc-block-components-text-input input[type="email"],
+.wc-block-components-form .wc-block-components-text-input input[type="number"],
+.wc-block-components-form .wc-block-components-text-input input[type="tel"],
+.wc-block-components-form .wc-block-components-text-input input[type="text"],
+.wc-block-components-form .wc-block-components-text-input input[type="url"],
+.wc-block-components-text-input input[type="email"],
+.wc-block-components-text-input input[type="number"],
+.wc-block-components-text-input input[type="tel"],
+.wc-block-components-text-input input[type="text"],
+.wc-block-components-text-input input[type="url"] {
+  background-color: transparent;
+  border: 1px solid var(--wp--preset--color--border-color);
+  color: var(--wp--preset--color--foreground);
+  font-size: 14px;
+  padding-top: 35px !important; }
+
+.wc-block-components-totals-coupon__form .wc-block-components-totals-coupon__button {
+  padding: 14px 28px;
+  font-size: 16px !important; }
+
+.wc-block-components-totals-coupon__form {
+  align-items: center; }
+
+.wc-block-components-form .wc-block-components-text-input label,
+.wc-block-components-text-input label {
+  color: var(--wp--preset--color--body-text);
+  font-size: 14px;
+  text-transform: capitalize;
+  font-weight: 300; }
+
+.wc-block-components-form .wc-block-components-text-input input[type="email"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="number"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="tel"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="text"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="url"]:focus,
+.wc-block-components-text-input input[type="email"]:focus,
+.wc-block-components-text-input input[type="number"]:focus,
+.wc-block-components-text-input input[type="tel"]:focus,
+.wc-block-components-text-input input[type="text"]:focus,
+.wc-block-components-text-input input[type="url"]:focus {
+  background-color: var(--wp--preset--color--secondary);
+  color: var(--wp--preset--color--foreground);
+  padding-top: 35px; }
+
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input:focus,
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input[aria-expanded="true"],
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input:focus,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input[aria-expanded="true"] {
+  background-color: var(--wp--preset--color--secondary);
+  color: var(--wp--preset--color--foreground);
+  font-size: 14px;
+  text-transform: capitalize;
+  font-weight: 300; }
+
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list {
+  background-color: var(--wp--preset--color--secondary);
+  color: var(--wp--preset--color--foreground);
+  font-size: 16px;
+  text-transform: capitalize;
+  font-weight: 300;
+  border: 1px solid var(--wp--preset--color--border-color); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion {
+  color: var(--wp--preset--color--foreground); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-selected,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-selected {
+  background-color: var(--wp--preset--color--primary);
+  color: var(--wp--preset--color--foreground); }
+
+/* Checkout */
+.wc-block-checkout__payment-method .wc-block-components-radio-control {
+  background-color: var(--wp--preset--color--secondary); }
+
+.wc-block-checkout__actions_row .wc-block-components-checkout-place-order-button {
+  padding: calc(0.667em + 2px) calc(1.333em + 2px); }
+
+/* After Wordpress 6.6.1 */
+.wc-block-components-form .wc-block-components-text-input label,
+.wc-block-components-text-input label {
+  font-size: 18px;
+  left: .8em; }
+
+.wc-block-components-form .wc-block-components-text-input input[type="email"],
+.wc-block-components-form .wc-block-components-text-input input[type="number"],
+.wc-block-components-form .wc-block-components-text-input input[type="tel"],
+.wc-block-components-form .wc-block-components-text-input input[type="text"],
+.wc-block-components-form .wc-block-components-text-input input[type="url"],
+.wc-block-components-text-input input[type="email"],
+.wc-block-components-text-input input[type="number"],
+.wc-block-components-text-input input[type="tel"],
+.wc-block-components-text-input input[type="text"],
+.wc-block-components-text-input input[type="url"] {
+  background-color: transparent;
+  border-radius: 0;
+  border: 1px solid var(--wp--preset--color--border-color);
+  color: var(--wp--preset--color--body-text);
+  font-size: 18px;
+  line-height: var(--wp--custom--typography--line-height--heading-six);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--wp--preset--font-family--roboto);
+  max-height: inherit; }
+  .wc-block-components-form .wc-block-components-text-input input[type="email"]:focus,
+  .wc-block-components-form .wc-block-components-text-input input[type="number"]:focus,
+  .wc-block-components-form .wc-block-components-text-input input[type="tel"]:focus,
+  .wc-block-components-form .wc-block-components-text-input input[type="text"]:focus,
+  .wc-block-components-form .wc-block-components-text-input input[type="url"]:focus,
+  .wc-block-components-text-input input[type="email"]:focus,
+  .wc-block-components-text-input input[type="number"]:focus,
+  .wc-block-components-text-input input[type="tel"]:focus,
+  .wc-block-components-text-input input[type="text"]:focus,
+  .wc-block-components-text-input input[type="url"]:focus {
+    background-color: transparent; }
+
+.wc-block-components-form .wc-block-components-text-input input[type="email"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="number"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="tel"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="text"]:focus,
+.wc-block-components-form .wc-block-components-text-input input[type="url"]:focus,
+.wc-block-components-text-input input[type="email"]:focus,
+.wc-block-components-text-input input[type="number"]:focus,
+.wc-block-components-text-input input[type="tel"]:focus,
+.wc-block-components-text-input input[type="text"]:focus,
+.wc-block-components-text-input input[type="url"]:focus {
+  box-shadow: none;
+  border-color: var(--wp--preset--color--text-link);
+  color: var(--wp--preset--color--foreground);
+  outline: none; }
+
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input {
+  background-color: transparent;
+  border-radius: 0;
+  border: 1px solid var(--wp--preset--color--border-color);
+  color: var(--wp--preset--color--body-text);
+  line-height: var(--wp--custom--typography--line-height--heading-six);
+  font-family: var(--wp--preset--font-family--roboto); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input:focus,
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input[aria-expanded="true"],
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input:focus,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input[aria-expanded="true"] {
+  box-shadow: none;
+  border-color: var(--wp--preset--color--text-link);
+  color: var(--wp--preset--color--foreground);
+  outline: none;
+  background-color: var(--wp--preset--color--background); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control input.components-combobox-control__input {
+  height: auto;
+  max-height: inherit;
+  padding: 1.5em .8em .5em;
+  font-size: 18px; }
+
+.wc-block-components-combobox .wc-block-components-combobox-control label.components-base-control__label,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control label.components-base-control__label {
+  left: 0.8em; }
+
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion {
+  font-size: 18px;
+  color: var(--wp--preset--color--body-text); }
+
+.wc-block-components-form .wc-block-components-text-input input:autofill,
+.wc-block-components-form .wc-block-components-text-input.is-active input[type="email"],
+.wc-block-components-form .wc-block-components-text-input.is-active input[type="number"],
+.wc-block-components-form .wc-block-components-text-input.is-active input[type="tel"],
+.wc-block-components-form .wc-block-components-text-input.is-active input[type="text"],
+.wc-block-components-form .wc-block-components-text-input.is-active input[type="url"],
+.wc-block-components-text-input input:autofill,
+.wc-block-components-text-input.is-active input[type="email"],
+.wc-block-components-text-input.is-active input[type="number"],
+.wc-block-components-text-input.is-active input[type="tel"],
+.wc-block-components-text-input.is-active input[type="text"],
+.wc-block-components-text-input.is-active input[type="url"] {
+  padding: 1.5em .8em 1em; }
+
+.wc-block-components-address-card,
+.wc-block-components-notice-banner,
+.wc-block-components-radio-control--highlight-checked .wc-block-components-radio-control-accordion-option--checked-option-highlighted,
+.wc-block-components-radio-control--highlight-checked label.wc-block-components-radio-control__option--checked-option-highlighted,
+.wc-block-checkout__payment-method .wc-block-components-radio-control-accordion-option:first-child:after,
+.wc-block-components-radio-control--highlight-checked:after {
+  border-radius: 0; }
+
+.wc-block-components-textarea {
+  background-color: transparent;
+  border-radius: 0;
+  border: 1px solid var(--wp--preset--color--border-color);
+  color: var(--wp--preset--color--body-text);
+  font-size: 18px;
+  line-height: var(--wp--custom--typography--line-height--heading-six);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--wp--preset--font-family--roboto); }
+
+.wc-block-components-notice-banner.is-warning {
+  background-color: var(--wp--preset--color--secondary);
+  color: var(--wp--preset--color--body-text); }
+
+.wc-block-components-radio-control--highlight-checked:after,
+.wc-block-components-radio-control--highlight-checked div.wc-block-components-radio-control-accordion-option::after,
+.wc-block-order-confirmation-totals table td,
+.wc-block-order-confirmation-totals table th,
+.wc-block-order-confirmation-totals table,
+.wc-block-order-confirmation-billing-address,
+.wc-block-order-confirmation-order-note,
+.wc-block-order-confirmation-shipping-address,
+.is-large.wc-block-cart .wc-block-cart-items td,
+.wc-block-components-totals-wrapper,
+.wc-block-components-quantity-selector::after {
+  border-color: var(--wp--preset--color--border-color); }
+
+.wc-block-components-radio-control--highlight-checked div.wc-block-components-radio-control-accordion-option::after,
+.wc-block-components-radio-control--highlight-checked .wc-block-components-radio-control__option::after {
+  background-color: var(--wp--preset--color--border-color); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list {
+  background-color: var(--wp--preset--color--secondary); }
+
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-highlighted,
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:active,
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:focus,
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:hover,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-highlighted,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:active,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:focus,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:hover,
+.wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-selected,
+.wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-selected {
+  background-color: var(--wp--preset--color--background);
+  color: var(--wp--preset--color--foreground); }
+  .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-highlighted:focus,
+  .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:active:focus,
+  .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:focus:focus,
+  .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:hover:focus,
+  .wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-highlighted:focus,
+  .wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:active:focus,
+  .wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:focus:focus,
+  .wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion:hover:focus,
+  .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-selected:focus,
+  .wc-block-components-form .wc-block-components-combobox .wc-block-components-combobox-control .components-form-token-field__suggestions-list .components-form-token-field__suggestion.is-selected:focus {
+    background-color: var(--wp--preset--color--background);
+    color: var(--wp--preset--color--foreground); }
+
+.wc-block-components-address-card {
+  border-color: var(--wp--preset--color--border-color); }
+
+.wc-block-components-checkbox .wc-block-components-checkbox__input[type="checkbox"] {
+  background: var(--wp--preset--color--secondary); }
+
+.wc-block-checkout__add-note .wc-block-components-textarea:focus {
+  background-color: transparent;
+  color: var(--wp--preset--color--foreground); }
+
+.woocommerce-account .woocommerce-MyAccount-navigation li {
+  padding-top: 0; }
+
+.woocommerce-account .woocommerce-orders-table__cell.woocommerce-orders-table__cell-order-actions a {
+  border-radius: 6px;
+  padding: 5px 14px; }
+
+.woocommerce-account .addresses .title h3 {
+  font-size: 24px; }
+
+.wc-block-grid__product .wc-block-grid__product-link {
+  text-decoration: none; }
+
+.wc-block-components-address-form__address_2-toggle {
+  color: var(--wp--preset--color--foreground); }
+  .wc-block-components-address-form__address_2-toggle:hover {
+    color: var(--wp--preset--color--primary); }
+
+.wc-block-components-checkbox .wc-block-components-checkbox__input[type="checkbox"]:focus {
+  border-color: var(--wp--preset--color--primary); }
+
+.wc-block-checkout__terms.wc-block-checkout__terms--with-separator {
+  border-color: var(--wp--preset--color--border-color); }
+
+.wc-block-grid__products .wc-block-grid__product-image {
+  width: 100%; }
+
+.wc-block-components-button.wp-element-button.wc-block-components-totals-coupon__button {
+  margin-top: 0 !important; }
+
+.wc-block-components-totals-shipping .wc-block-components-totals-shipping__change-address__link {
+  color: var(--wp--preset--color--body-text); }
+  .wc-block-components-totals-shipping .wc-block-components-totals-shipping__change-address__link:hover {
+    color: var(--wp--preset--color--primary); }
+
+.wc-block-components-notice-banner.is-info {
+  background-color: var(--wp--preset--color--secondary);
+  color: var(--wp--preset--color--body-text); }
+
+.wc-block-order-confirmation-status {
+  margin-bottom: 1.5rem !important; }
+
+/* View Cart Button */
+.wp-block-button.wc-block-grid__product-add-to-cart {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px; }
+
+.woocommerce a.button.disabled,
+.woocommerce a.button.disabled:hover,
+.woocommerce a.button:disabled,
+.woocommerce a.button:disabled:hover,
+.woocommerce a.button:disabled[disabled],
+.woocommerce a.button:disabled[disabled]:hover,
+.woocommerce button.button.disabled,
+.woocommerce button.button.disabled:hover,
+.woocommerce button.button:disabled,
+.woocommerce button.button:disabled:hover,
+.woocommerce button.button:disabled[disabled],
+.woocommerce button.button:disabled[disabled]:hover {
+  opacity: 0.5 !important; }
+
+.woocommerce a.button.disabled:hover,
+.woocommerce a.button:disabled:hover,
+.woocommerce a.button:disabled[disabled]:hover,
+.woocommerce button.button.disabled:hover,
+.woocommerce button.button:disabled:hover,
+.woocommerce button.button:disabled[disabled]:hover {
+  background: var(--wp--preset--color--primary);
+  color: var(--wp--preset--color--color-light); }
+
+.woocommerce #respond input#submit.disabled,
+.woocommerce #respond input#submit:disabled,
+.woocommerce #respond input#submit:disabled[disabled],
+.woocommerce a.button.disabled,
+.woocommerce a.button:disabled,
+.woocommerce a.button:disabled[disabled],
+.woocommerce button.button.disabled,
+.woocommerce button.button:disabled,
+.woocommerce button.button:disabled[disabled],
+.woocommerce input.button.disabled,
+.woocommerce input.button:disabled,
+.woocommerce input.button:disabled[disabled] {
+  padding-top: max(0.7rem, 0.75vw);
+  padding-right: max(1.5rem, 1.85vw);
+  padding-bottom: max(0.7rem, 0.75vw);
+  padding-left: max(1.5rem, 1.85vw); }
+
+.wc-blocks-components-select .wc-blocks-components-select__container {
+  background: var(--wp--preset--color--background);
+  border-color: var(--wp--preset--color--border-color);
+  border-radius: 0;
+  height: 58px; }
+
+.wc-blocks-components-select .wc-blocks-components-select__label {
+  color: var(--wp--preset--color--body-text);
+  left: .8em; }
+
+.wc-blocks-components-select .wc-blocks-components-select__select {
+  font-size: 18px;
+  padding-top: 1.3em;
+  padding-left: .8em;
+  color: var(--wp--preset--color--body-text);
+  background: var(--wp--preset--color--background); }
+  .wc-blocks-components-select .wc-blocks-components-select__select:focus {
+    color: var(--wp--preset--color--foreground); }
+
+.wp-block-woocommerce-customer-account a .wc-block-customer-account__account-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0;
+  color: var(--wp--preset--color--foreground); }
+
+.woocommerce-account .addresses .title .edit {
+  font-size: 14px; }
 
 /*--------------------------------------------------------------
 # Components
@@ -4276,7 +4668,7 @@ cart-collaterals .cart_totals .shop_table td {
   text-align: center; }
 
 .wp-block-clients-testimonial .wp-block-testimonial h4 {
-  font-size: var(--wp--preset--font-size--normal);
+  font-size: var(--wp--preset--font-size--body-default);
   padding-right: 56px;
   line-height: var(--wp--custom--typography--line-height--paragraph); }
 
@@ -4886,15 +5278,12 @@ input::-webkit-inner-spin-button {
   border-width: 32px;
   border-left: 0; }
 
-.wp-block-section:nth-child(2n-1).wp-product-review-section .wc-block-review-list.wc-block-components-review-list li:after {
-  border-top-color: var(--wp--preset--color--secondary); }
-
 .wp-product-review-section .wc-block-review-list.wc-block-components-review-list li:not(:first-child) {
   margin-top: calc(6.666666666666667 * var(--wp--style--block-gap, 2em)); }
 
 .wp-product-review-section .wc-block-review-list-item__product.wc-block-components-review-list-item__product a {
   text-decoration: none;
-  font-size: var(--wp--preset--font-size--normal); }
+  font-size: var(--wp--preset--font-size--body-default); }
 
 .wp-product-review-section .wc-block-components-review-list-item__rating > .wc-block-components-review-list-item__rating__stars {
   font-size: 0.8em; }
@@ -5033,11 +5422,6 @@ input::-webkit-inner-spin-button {
   border: 1px solid var(--wp--preset--color--border-color);
   width: 100%;
   height: 100%; }
-
-.wp-block-section:nth-child(2n-1).wp-block-products .wc-block-grid__product:before {
-  border: none;
-  left: 0;
-  top: 0; }
 
 .wp-block-products .wc-block-grid__product.wc-block-grid__product {
   margin-bottom: 0; }
@@ -5741,7 +6125,6 @@ input::-webkit-inner-spin-button {
     pointer-events: none;
     margin-block-start: 0 !important;
     z-index: 9999;
-    transition: all 0.00003s ease-in-out;
     animation: pulse 0.5s cubic-bezier(0.51, 0, 0.4, 0.5) alternate infinite;
     transform: translate(-50%, -50%) scale(1); }
 
@@ -5767,6 +6150,9 @@ input::-webkit-inner-spin-button {
     width: 70px;
     height: 70px;
     animation: cubic-bezier(0.51, 0, 0.4, 0.9); }
+
+  .custom-cursor.menu__active.dark-overlay {
+    background: rgba(0, 0, 0, 0.15); }
 
   .custom-cursor.team__active:before {
     content: "View More";
@@ -6239,5 +6625,3 @@ a:focus svg.icon,
 .is-style-outline > .wp-block-button__link:not(.has-background):hover,
 .wp-block-button__link.is-style-outline:not(.has-background):hover {
   color: var(--wp--preset--color--background); }
-
-/*# sourceMappingURL=style.css.map */

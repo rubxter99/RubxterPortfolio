@@ -46,10 +46,11 @@ if ( ! class_exists( 'Astra_Single_Typo_Configs' ) ) {
 						'name'     => ASTRA_THEME_SETTINGS . '[ast-single-post-items]',
 						'type'     => 'control',
 						'control'  => 'ast-upgrade',
+						'campaign' => 'blog-single',
 						'renderAs' => 'list',
 						'choices'  => array(
 							'one'   => array(
-								'title' => __( 'Author info', 'astra' ),
+								'title' => __( 'Author Box with Social Share', 'astra' ),
 							),
 							'two'   => array(
 								'title' => __( 'Auto load previous posts', 'astra' ),

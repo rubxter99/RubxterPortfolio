@@ -12,29 +12,29 @@
     <div class="wp-block-cover__inner-container"><!-- wp:group {"layout":{"type":"constrained"}} -->
         <div class="wp-block-group"><!-- wp:group {"className":"header-title-wrapper","layout":{"type":"constrained","justifyContent":"center"}} -->
             <div class="wp-block-group header-title-wrapper"><!-- wp:group {"className":"header-animate-wrap","layout":{"type":"constrained"}} -->
-                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge"} -->
-                    <h2 class="has-text-align-center header-animate has-huge-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('We', 'bizboost') ?></h2>
+                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge-display"} -->
+                    <h2 class="has-text-align-center header-animate has-huge-display-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('We', 'bizboost') ?></h2>
                     <!-- /wp:heading -->
                 </div>
                 <!-- /wp:group -->
 
                 <!-- wp:group {"className":"header-animate-wrap","layout":{"type":"constrained"}} -->
-                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge"} -->
-                    <h2 class="has-text-align-center header-animate has-huge-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('build', 'bizboost') ?></h2>
+                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge-display"} -->
+                    <h2 class="has-text-align-center header-animate has-huge-display-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('build', 'bizboost') ?></h2>
                     <!-- /wp:heading -->
                 </div>
                 <!-- /wp:group -->
 
                 <!-- wp:group {"className":"header-animate-wrap","layout":{"type":"constrained"}} -->
-                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge"} -->
-                    <h2 class="has-text-align-center header-animate has-huge-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('digital', 'bizboost') ?></h2>
+                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge-display"} -->
+                    <h2 class="has-text-align-center header-animate has-huge-display-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('digital', 'bizboost') ?></h2>
                     <!-- /wp:heading -->
                 </div>
                 <!-- /wp:group -->
 
                 <!-- wp:group {"className":"header-animate-wrap","layout":{"type":"constrained"}} -->
-                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge"} -->
-                    <h2 class="has-text-align-center header-animate has-huge-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('experiences.', 'bizboost') ?></h2>
+                <div class="wp-block-group header-animate-wrap"><!-- wp:heading {"textAlign":"center","style":{"typography":{"fontStyle":"normal","fontWeight":"500"}},"className":"header-animate","fontSize":"huge-display"} -->
+                    <h2 class="has-text-align-center header-animate has-huge-display-font-size" style="font-style:normal;font-weight:500"><?php esc_html_e('experiences.', 'bizboost') ?></h2>
                     <!-- /wp:heading -->
                 </div>
                 <!-- /wp:group -->

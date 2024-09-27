@@ -35,7 +35,7 @@
                         <h2 class="has-content-heading-font-size"><?php esc_html_e ( 'Creative Lights', 'bizboost' ) ?></h2>
                         <!-- /wp:heading -->
                         <!-- wp:paragraph -->
-                        <p><?php esc_html_e ( 'Lorem ipsum dolor sit amet consecte tur adipiscing elit integer fermentum in orci lorem ipsum.', 'bizboost' ) ?></p>
+                        <p><?php esc_html_e ('We collaborate with smart and creative people to build awesome WordPress Full Site Editing Themes.', 'bizboost' ) ?></p>
                         <!-- /wp:paragraph -->
                         <!-- wp:buttons -->
                         <div class="wp-block-buttons">
@@ -65,7 +65,7 @@
                         <h2 class="has-content-heading-font-size"><?php esc_html_e ( 'Mobile Photography', 'bizboost' ) ?></h2>
                         <!-- /wp:heading -->
                         <!-- wp:paragraph -->
-                        <p><?php esc_html_e ( 'Lorem ipsum dolor sit amet consecte tur adipiscing elit integer fermentum in orci lorem ipsum.', 'bizboost' ) ?></p>
+                        <p><?php esc_html_e ( 'We collaborate with smart and creative people to build awesome WordPress Full Site Editing Themes.', 'bizboost' ) ?></p>
                         <!-- /wp:paragraph -->
                         <!-- wp:buttons -->
                         <div class="wp-block-buttons">
@@ -95,7 +95,7 @@
                         <h2 class="has-content-heading-font-size"><?php esc_html_e ( 'Vintage Camera', 'bizboost' ) ?></h2>
                         <!-- /wp:heading -->
                         <!-- wp:paragraph -->
-                        <p><?php esc_html_e ( 'Lorem ipsum dolor sit amet consecte tur adipiscing elit integer fermentum in orci lorem ipsum.', 'bizboost' ) ?></p>
+                        <p><?php esc_html_e ( 'We collaborate with smart and creative people to build awesome WordPress Full Site Editing Themes.', 'bizboost' ) ?></p>
                         <!-- /wp:paragraph -->
                         <!-- wp:buttons -->
                         <div class="wp-block-buttons">

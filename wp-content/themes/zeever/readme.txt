@@ -177,6 +177,16 @@ Source: https://pxhere.com/en/photo/1258806
 
 == Changelog ==
 
+= 1.1.3 - 2024-05-17 =
+* Update Gutenverse template path
+* Remove unused core templates
+
+= 1.1.2 - 2024-03-21 =
+* Update notice design
+
+= 1.1.1 - 2024-01-31 =
+* Update Ajax
+
 = 1.1.0 - 2023-07-11 =
 * Update theme dashboard
 * Fix post content inherit layout

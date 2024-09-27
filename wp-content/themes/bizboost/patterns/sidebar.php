@@ -17,7 +17,7 @@
         <figure class="wp-block-image size-large"><img src="<?php echo get_parent_theme_file_uri( '/assets/images/featured-services.jpg' ); ?>" alt="" /></figure>
         <!-- /wp:image -->
         <!-- wp:paragraph -->
-        <p><?php esc_html_e ( 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Maecenas odio lacus, dignissim sollicitudin finibus commodo, rhoncus et ante.', 'bizboost' ) ?></p>
+        <p><?php esc_html_e ('We collaborate with smart and creative people to build awesome WordPress Full Site Editing Themes.', 'bizboost' ) ?></p>
         <!-- /wp:paragraph -->
     </div>
     <!-- /wp:group -->

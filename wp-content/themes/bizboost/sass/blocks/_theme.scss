@@ -1920,3 +1920,8 @@ footer .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigat
   width: auto;
   padding: 10px;
 }
+
+/* Wp Block Heading Color Issue in Wp Block Cover After Wordpress 6.6.1 - For Frontend*/
+:root .wp-block-cover:not(.wp-block-header-media-no-image) :where(.wp-block-heading) {
+  color: inherit;
+}

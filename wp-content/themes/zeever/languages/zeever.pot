@@ -1,17 +1,17 @@
-# Copyright (C) 2023 Jegstudio
+# Copyright (C) 2024 Jegstudio
 # This file is distributed under the GNU General Public License v3 or later..
 msgid ""
 msgstr ""
-"Project-Id-Version: Zeever 1.1.0\n"
+"Project-Id-Version: Zeever 1.1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/zeever\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-07-10T05:55:27+00:00\n"
+"POT-Creation-Date: 2024-05-17T05:46:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: zeever\n"
 
 #. Theme Name of the theme
@@ -93,148 +93,144 @@ msgstr ""
 msgid "Navigation Padding"
 msgstr ""
 
-#: inc/class/class-init.php:858
-msgid "Check it Now!"
+#: inc/class/class-init.php:884
+msgid "Install Required Plugins"
 msgstr ""
 
-#: inc/class/class-init.php:939
-msgid "Thank you for installing Zeever!"
+#: inc/class/class-init.php:1131
+msgid "Take Your Website To New Height with"
 msgstr ""
 
-#: inc/class/class-init.php:940
-msgid "Zeever theme work best with Gutenverse plugin. By installing Gutenverse plugin you may access Zeever templates built with Gutenverse and get access to more than 40 free blocks."
+#: inc/class/class-init.php:1132
+msgid "Zeever theme work best with Gutenverse plugin. By installing Gutenverse plugin you may access Zeever templates built with Gutenverse and get access to more than 40 free blocks, hundred free Layout and Section."
 msgstr ""
 
-#: inc/class/class-init.php:946
-msgid "More Info"
-msgstr ""
-
-#: inc/class/class-init.php:978
+#: inc/class/class-init.php:1170
 msgid "Please install newer version of Gutenverse plugin! (v1.1.2 and above)"
 msgstr ""
 
-#: inc/class/class-init.php:1008
+#: inc/class/class-init.php:1200
 msgid "Primary"
 msgstr ""
 
-#: inc/class/class-upgrader.php:84
+#: inc/class/class-upgrader.php:93
 msgid "Front Page exist. If you want migrate index, please clear Front Page customization."
 msgstr ""
 
-#: inc/class/class-upgrader.php:93
+#: inc/class/class-upgrader.php:102
 msgid "Front Page"
 msgstr ""
 
-#: inc/class/class-upgrader.php:199
+#: inc/class/class-upgrader.php:208
 msgid "Important"
 msgstr ""
 
-#: inc/class/class-upgrader.php:199
+#: inc/class/class-upgrader.php:208
 msgid "Upgrade Notice!"
 msgstr ""
 
-#: inc/class/class-upgrader.php:204
+#: inc/class/class-upgrader.php:213
 msgid "We notice you are upgrading from old theme and also have updated your Front Page. If previously you have issue with data lost on your home page, please proceed with upgrading process below."
-msgstr ""
-
-#: inc/class/class-upgrader.php:206
-#: inc/class/class-upgrader.php:222
-msgid "Please visit site editor page."
-msgstr ""
-
-#: inc/class/class-upgrader.php:207
-msgid "Before resetting, please make sure you back up your changes of Front Page template first."
-msgstr ""
-
-#: inc/class/class-upgrader.php:208
-msgid "If you sure you are having this issue, you can"
-msgstr ""
-
-#: inc/class/class-upgrader.php:209
-msgid "reset the Front Page template."
-msgstr ""
-
-#: inc/class/class-upgrader.php:210
-msgid "But don't reset the Index template."
-msgstr ""
-
-#: inc/class/class-upgrader.php:212
-msgid "After resetting, please refresh this page."
 msgstr ""
 
 #: inc/class/class-upgrader.php:215
 #: inc/class/class-upgrader.php:231
-msgid "I don't have the issue"
+msgid "Please visit site editor page."
 msgstr ""
 
-#: inc/class/class-upgrader.php:220
-msgid "We notice you are upgrading from old theme. If you have issue with data lost on your front page, please proceed with upgrading process below."
+#: inc/class/class-upgrader.php:216
+msgid "Before resetting, please make sure you back up your changes of Front Page template first."
 msgstr ""
 
-#: inc/class/class-upgrader.php:223
-msgid "Check your front page (from top to bottom), if your front page looks different than before, please click \"Fix Issue\" button below."
+#: inc/class/class-upgrader.php:217
+msgid "If you sure you are having this issue, you can"
+msgstr ""
+
+#: inc/class/class-upgrader.php:218
+msgid "reset the Front Page template."
+msgstr ""
+
+#: inc/class/class-upgrader.php:219
+msgid "But don't reset the Index template."
+msgstr ""
+
+#: inc/class/class-upgrader.php:221
+msgid "After resetting, please refresh this page."
 msgstr ""
 
 #: inc/class/class-upgrader.php:224
+#: inc/class/class-upgrader.php:240
+msgid "I don't have the issue"
+msgstr ""
+
+#: inc/class/class-upgrader.php:229
+msgid "We notice you are upgrading from old theme. If you have issue with data lost on your front page, please proceed with upgrading process below."
+msgstr ""
+
+#: inc/class/class-upgrader.php:232
+msgid "Check your front page (from top to bottom), if your front page looks different than before, please click \"Fix Issue\" button below."
+msgstr ""
+
+#: inc/class/class-upgrader.php:233
 msgid "This issue only happened for Front Page, any change you made elsewhere are still intact."
 msgstr ""
 
-#: inc/class/class-upgrader.php:225
+#: inc/class/class-upgrader.php:234
 msgid "This process will copy the content of your Index template to your Front Page template. You can always revert back to default front page by "
 msgstr ""
 
-#: inc/class/class-upgrader.php:226
+#: inc/class/class-upgrader.php:235
 msgid "resetting the template."
 msgstr ""
 
-#: inc/class/class-upgrader.php:230
-#: inc/class/class-upgrader.php:256
+#: inc/class/class-upgrader.php:239
+#: inc/class/class-upgrader.php:265
 msgid "Fix Issue"
 msgstr ""
 
-#: inc/class/class-upgrader.php:296
-#: inc/class/class-upgrader.php:338
+#: inc/class/class-upgrader.php:309
+#: inc/class/class-upgrader.php:355
 msgid "%s Upgrade Notice!"
 msgstr ""
 
-#: inc/class/class-upgrader.php:298
+#: inc/class/class-upgrader.php:311
 msgid "There are some new exciting updates we want to announce. This update will required the latest version of Gutenverse plugin to work smoothly, so we recommend to update your Gutenverse plugin."
 msgstr ""
 
-#: inc/class/class-upgrader.php:304
+#: inc/class/class-upgrader.php:317
 msgid "Go to plugin page"
 msgstr ""
 
-#: inc/class/class-upgrader.php:308
-#: inc/class/class-upgrader.php:348
+#: inc/class/class-upgrader.php:321
+#: inc/class/class-upgrader.php:365
 msgid "Close notification"
 msgstr ""
 
-#: inc/class/class-upgrader.php:340
+#: inc/class/class-upgrader.php:357
 msgid "We've made some changes to page content layout and global style. Please check "
 msgstr ""
 
-#: inc/class/class-upgrader.php:341
+#: inc/class/class-upgrader.php:358
 msgid "your pages"
 msgstr ""
 
-#: inc/class/class-upgrader.php:342
+#: inc/class/class-upgrader.php:359
 msgid " to see how the new layout looks on your site. You can always revert back by enable the inherit layout option on the "
 msgstr ""
 
-#: inc/class/class-upgrader.php:343
+#: inc/class/class-upgrader.php:360
 msgid "Gutenverse settings."
 msgstr ""
 
-#: inc/class/class-upgrader.php:344
+#: inc/class/class-upgrader.php:361
 msgid " dashboard. Learn more about new layout on "
 msgstr ""
 
-#: inc/class/class-upgrader.php:345
+#: inc/class/class-upgrader.php:362
 msgid "this page."
 msgstr ""
 
-#: inc/class/class-upgrader.php:350
+#: inc/class/class-upgrader.php:367
 msgid "Got Question?"
 msgstr ""
 
@@ -405,6 +401,61 @@ msgid "This theme was built for the WordPress full-site-editing feature. If you 
 msgstr ""
 
 #: theme.json
+msgctxt "Color name"
+msgid "Primary"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Secondary"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Third"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Body Text"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Background Soft"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Border"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Button Border"
+msgstr ""
+
+#: theme.json
+msgctxt "Color name"
+msgid "Form"
+msgstr ""
+
+#: theme.json
+msgctxt "Gradient name"
+msgid "Pink to Yellow"
+msgstr ""
+
+#: theme.json
+msgctxt "Font family name"
+msgid "Poppins"
+msgstr ""
+
+#: theme.json
+msgctxt "Font family name"
+msgid "Heebo"
+msgstr ""
+
+#: theme.json
 msgctxt "Font size name"
 msgid "Tiny"
 msgstr ""
@@ -467,61 +518,6 @@ msgstr ""
 #: theme.json
 msgctxt "Font size name"
 msgid "Heading 6"
-msgstr ""
-
-#: theme.json
-msgctxt "Font family name"
-msgid "Poppins"
-msgstr ""
-
-#: theme.json
-msgctxt "Font family name"
-msgid "Heebo"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Primary"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Secondary"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Third"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Body Text"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Background Soft"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Border"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Button Border"
-msgstr ""
-
-#: theme.json
-msgctxt "Color name"
-msgid "Form"
-msgstr ""
-
-#: theme.json
-msgctxt "Gradient name"
-msgid "Pink to Yellow"
 msgstr ""
 
 #: theme.json

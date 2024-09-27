@@ -46,21 +46,30 @@ class Upgrader {
 	 * Change option to false.
 	 */
 	public function upgrader_index_close() {
-		update_option( $this->get_index_option_name(), false );
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'waterlava_upgrade_index' ) ) {
+			update_option( $this->get_index_option_name(), false );
+		}
+		die;
 	}
 
 	/**
 	 * Change option to false.
 	 */
 	public function upgrader_page_close() {
-		update_option( $this->get_page_option_name(), false );
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'waterlava_upgrade_notice' ) ) {
+			update_option( $this->get_page_option_name(), false );
+		}
+		die;
 	}
 
 	/**
 	 * Change option to false.
 	 */
 	public function upgrader_page_content_close() {
-		update_option( $this->get_page_content_option_name(), false );
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'waterlava_content_upgrade_notice' ) ) {
+			update_option( $this->get_page_content_option_name(), false );
+		}
+		die;
 	}
 
 	/**
@@ -258,9 +267,13 @@ class Upgrader {
 						})
 					});
 
-					$('.theme-upgrade-notice.index-upgrade .close-notification').on('click', function() {
+					$('.theme-upgrade-notice.index-upgrade .close-notification').on('click', function( event ) {
+						event.preventDefault();
+						var nonce = '<?php echo esc_html( wp_create_nonce( 'waterlava_upgrade_index' ) ); ?>';
+
 						$.post( ajaxurl, {
-							action: 'themes_upgrader_index_close'
+							action: 'themes_upgrader_index_close',
+							nonce: nonce
 						} );
 
 						$('.theme-upgrade-notice.index-upgrade').fadeOut();
@@ -311,9 +324,13 @@ class Upgrader {
 					</div>
 					<script>
 						(function($) {
-							$('.theme-upgrade-notice.page-content-upgrade .close-notification').on('click', function() {
+							$('.theme-upgrade-notice.page-content-upgrade .close-notification').on('click', function( event ) {
+								event.preventDefault();
+								var nonce = '<?php echo esc_html( wp_create_nonce( 'waterlava_content_upgrade_notice' ) ); ?>';
+
 								$.post( ajaxurl, {
-									action: 'themes_upgrader_page_content_close'
+									action: 'themes_upgrader_page_content_close',
+									nonce: nonce
 								} );
 
 								$('.theme-upgrade-notice.page-content-upgrade').fadeOut();
@@ -354,9 +371,13 @@ class Upgrader {
 					</div>
 					<script>
 						(function($) {
-							$('.theme-upgrade-notice.page-upgrade .close-notification').on('click', function() {
+							$('.theme-upgrade-notice.page-upgrade .close-notification').on('click', function( event ) {
+								event.preventDefault();
+								var nonce = '<?php echo esc_html( wp_create_nonce( 'waterlava_upgrade_notice' ) ); ?>';
+
 								$.post( ajaxurl, {
-									action: 'themes_upgrader_page_close'
+									action: 'themes_upgrader_page_close',
+									nonce: nonce
 								} );
 
 								$('.theme-upgrade-notice.page-upgrade').fadeOut();

@@ -67,7 +67,7 @@ class Init {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'init', array( $this, 'register_block_patterns' ), 9 );
 		add_action( 'init', array( $this, 'register_block_styles' ), 9 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'dashboard_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'backend_scripts' ) );
 
 		// filters.
 		add_filter( 'excerpt_length', array( $this, 'excerpt_length' ) );
@@ -80,6 +80,18 @@ class Init {
 		add_filter( 'gutenverse_block_config', array( $this, 'default_font' ), 10 );
 		add_filter( 'gutenverse_font_header', array( $this, 'default_header_font' ) );
 		add_filter( 'gutenverse_global_css', array( $this, 'global_header_style' ) );
+
+		add_filter( 'gutenverse_stylesheet_directory', array( $this, 'change_stylesheet_directory' ) );
+		add_filter( 'gutenverse_themes_override_mechanism', '__return_true' );
+	}
+
+	/**
+	 * Change Stylesheet Directory.
+	 *
+	 * @return string
+	 */
+	public function change_stylesheet_directory() {
+		return ZEEVER_DIR . 'gutenverse-files';
 	}
 
 	/**
@@ -703,8 +715,6 @@ class Init {
 	 * @return array
 	 */
 	public function add_template( $template_files, $template_type ) {
-		$directory = get_template_directory();
-
 		if ( 'wp_template' === $template_type ) {
 			$new_templates = array(
 				'about',
@@ -717,7 +727,7 @@ class Init {
 			foreach ( $new_templates as $template ) {
 				$template_files[] = array(
 					'slug'  => $template,
-					'path'  => $directory . "/gutenverse-templates/templates/{$template}.html",
+					'path'  => $this->change_stylesheet_directory() . "/templates/{$template}.html",
 					'theme' => get_template(),
 					'type'  => 'wp_template',
 				);
@@ -737,37 +747,35 @@ class Init {
 	 * @return string
 	 */
 	public function template_path( $template_file, $theme_slug, $template_slug ) {
-		$directory = get_template_directory();
-
 		switch ( $template_slug ) {
 			case '404':
-				return $directory . '/gutenverse-templates/templates/404.html';
+				return $this->change_stylesheet_directory() . '/templates/404.html';
 			case 'about':
-				return $directory . '/gutenverse-templates/templates/about.html';
+				return $this->change_stylesheet_directory() . '/templates/about.html';
 			case 'archive':
-				return $directory . '/gutenverse-templates/templates/archive.html';
+				return $this->change_stylesheet_directory() . '/templates/archive.html';
 			case 'blog':
-				return $directory . '/gutenverse-templates/templates/blog.html';
+				return $this->change_stylesheet_directory() . '/templates/blog.html';
 			case 'contact':
-				return $directory . '/gutenverse-templates/templates/contact.html';
+				return $this->change_stylesheet_directory() . '/templates/contact.html';
 			case 'front-page':
-				return $directory . '/gutenverse-templates/templates/front-page.html';
+				return $this->change_stylesheet_directory() . '/templates/front-page.html';
 			case 'index':
-				return $directory . '/gutenverse-templates/templates/index.html';
+				return $this->change_stylesheet_directory() . '/templates/index.html';
 			case 'page':
-				return $directory . '/gutenverse-templates/templates/page.html';
+				return $this->change_stylesheet_directory() . '/templates/page.html';
 			case 'projects':
-				return $directory . '/gutenverse-templates/templates/projects.html';
+				return $this->change_stylesheet_directory() . '/templates/projects.html';
 			case 'search':
-				return $directory . '/gutenverse-templates/templates/search.html';
+				return $this->change_stylesheet_directory() . '/templates/search.html';
 			case 'service':
-				return $directory . '/gutenverse-templates/templates/service.html';
+				return $this->change_stylesheet_directory() . '/templates/service.html';
 			case 'single':
-				return $directory . '/gutenverse-templates/templates/single.html';
+				return $this->change_stylesheet_directory() . '/templates/single.html';
 			case 'header':
-				return $directory . '/gutenverse-templates/parts/header.html';
+				return $this->change_stylesheet_directory() . '/parts/header.html';
 			case 'footer':
-				return $directory . '/gutenverse-templates/parts/footer.html';
+				return $this->change_stylesheet_directory() . '/parts/footer.html';
 		}
 
 		return $template_file;
@@ -828,7 +836,9 @@ class Init {
 	 * Notice Closed
 	 */
 	public function notice_closed() {
-		update_user_meta( get_current_user_id(), 'gutenverse_install_notice', 'true' );
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'zeever_admin_notice' ) ) {
+			update_user_meta( get_current_user_id(), 'gutenverse_install_notice', 'true' );
+		}
 		die;
 	}
 
@@ -847,6 +857,10 @@ class Init {
 		}
 
 		$screen = get_current_screen();
+		if ( isset( $screen->parent_file ) && 'themes.php' === $screen->parent_file && 'appearance_page_zeever-dashboard' === $screen->id ) {
+			return;
+		}
+
 		if ( isset( $screen->parent_file ) && 'plugins.php' === $screen->parent_file && 'update' === $screen->id ) {
 			return;
 		}
@@ -855,26 +869,76 @@ class Init {
 			return;
 		}
 
-		$button_text = __( 'Check it Now!', 'zeever' );
+		$all_plugin = get_plugins();
+		$plugins    = $this->theme_config()['plugins'];
+		$actions    = array();
+
+		foreach ( $plugins as $plugin ) {
+			$slug   = $plugin['slug'];
+			$path   = "$slug/$slug.php";
+			$active = is_plugin_active( $path );
+
+			if ( isset( $all_plugin[ $path ] ) ) {
+				if ( $active ) {
+					$actions[ $slug ] = 'active';
+				} else {
+					$actions[ $slug ] = 'inactive';
+				}
+			} else {
+				$actions[ $slug ] = '';
+			}
+		}
+
+		$button_text = __( 'Install Required Plugins', 'zeever' );
 		$button_link = wp_nonce_url( self_admin_url( 'themes.php?page=zeever-dashboard' ), 'install-plugin_gutenverse' );
 		?>
 		<style>
 			.install-gutenverse-plugin-notice {
 				border: 1px solid #E6E6EF;
-				border-radius: 5px;
-				padding: 20px;
 				position: relative;
 				overflow: hidden;
-				background-image: url(<?php echo esc_url( ZEEVER_URI . '/assets/images/mockup-2x.png' ); ?>);
-				background-position: right top;
-				background-repeat: no-repeat;
-				border-left: 4px solid #3B57F7;
+				padding: 0 !important;
+				margin-bottom: 30px !important;
+				background: url( <?php echo esc_url( ZEEVER_URI . '/assets/img/background-banner.png' ); ?> );
+				background-size: cover;
+				background-position: center;
+			}
+
+			.install-gutenverse-plugin-notice .gutenverse-notice-content {
+				display: flex;
+				align-items: center;
+			}
+
+			.gutenverse-notice-text, .gutenverse-notice-image {
+				width: 50%;
+			}
+
+			.gutenverse-notice-text {
+				padding: 40px 0 40px 40px;
+			}
+
+			.install-gutenverse-plugin-notice img {
+				max-width: 100%;
+				display: flex;
+			}
+
+			.install-gutenverse-plugin-notice:after {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 0;
+				height: 100%;
+				width: 5px;
+				display: block;
+				background: linear-gradient(to bottom, #68E4F4, #4569FF, #F045FF);
 			}
 
 			.install-gutenverse-plugin-notice .notice-dismiss {
 				top: 20px;
 				right: 20px;
 				padding: 0;
+				background: white;
+				border-radius: 6px;
 			}
 
 			.install-gutenverse-plugin-notice .notice-dismiss:before {
@@ -889,19 +953,29 @@ class Init {
 
 			.install-gutenverse-plugin-notice h3 {
 				margin-top: 5px;
+				margin-bottom: 15px;
+				font-weight: 600;
+				font-size: 25px;
+				line-height: 1.4em;
+			}
+
+			.install-gutenverse-plugin-notice h3 span {
 				font-weight: 700;
-				font-size: 18px;
+				background-clip: text !important;
+				-webkit-text-fill-color: transparent;
+				background: linear-gradient(80deg, rgba(208, 77, 255, 1) 0%,rgba(69, 105, 255, 1) 48.8%,rgba(104, 228, 244, 1) 100%);
 			}
 
 			.install-gutenverse-plugin-notice p {
-				font-size: 14px;
+				font-size: 13px;
 				font-weight: 300;
+				margin: 5px 100px 20px 0 !important;
 			}
 
 			.install-gutenverse-plugin-notice .gutenverse-bottom {
 				display: flex;
 				align-items: center;
-				margin-top: 20px;
+				margin-top: 30px;
 			}
 
 			.install-gutenverse-plugin-notice a {
@@ -915,37 +989,163 @@ class Init {
 				cursor: pointer;
 				font-size: 12px;
 				line-height: 18px;
-				border-radius: 17px;
+				border-radius: 5px;
 				background: #3B57F7;
 				color: #fff;
 				padding: 8px 30px;
-				font-weight: 300;
+				font-weight: 500;
+				background: linear-gradient(to left, #68E4F4, #4569FF, #F045FF);
+			}
+
+			#gutenverse-install-plugin.loader:after {
+				display: block;
+				content: '';
+				border: 5px solid white;
+				border-radius: 50%;
+				border-top: 5px solid rgba(255, 255, 255, 0);
+				width: 10px;
+				height: 10px;
+				-webkit-animation: spin 2s linear infinite;
+				animation: spin 2s linear infinite;
+			}
+
+			@-webkit-keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+				}
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			@media screen and (max-width: 1024px) {
+				.gutenverse-notice-text {
+					width: 100%;
+				}
+
+				.gutenverse-notice-image {
+					display: none;
+				}
 			}
 		</style>
 		<script>
+		var promises = [];
+		var actions = <?php echo wp_json_encode( $actions ); ?>;
+
+		function sequenceInstall (plugins, index = 0) {
+			if (plugins[index]) {
+				var plugin = plugins[index];
+
+				switch (actions[plugin?.slug]) {
+					case 'active':
+						break;
+					case 'inactive':
+						var path = plugin?.slug + '/' + plugin?.slug;
+						promises.push(
+							new Promise((resolve) => {
+								fetch(wpApiSettings.root + 'wp/v2/plugins/' + path, {									
+									method: 'POST',
+									headers: {
+										"X-WP-Nonce": wpApiSettings.nonce,
+										'Content-Type': 'application/json',
+									},
+									body: JSON.stringify(
+										{
+											status: 'active'
+										}
+									)
+								}).then(() => {
+									sequenceInstall(plugins, index + 1);
+									resolve(plugin);
+								}).catch((error) => {
+									alert('Plugin Install Failed')	
+								});
+							})
+						);
+						break;
+					default:
+						promises.push(
+							new Promise((resolve) => {
+								fetch(wpApiSettings.root + 'wp/v2/plugins', {									
+									method: 'POST',
+									headers: {
+										"X-WP-Nonce": wpApiSettings.nonce,
+										'Content-Type': 'application/json',
+									},
+									body: JSON.stringify(
+										{
+											slug: plugin?.slug,
+											status: 'active'
+										}
+									)
+								}).then(() => {
+									sequenceInstall(plugins, index + 1);
+									resolve(plugin);
+								}).catch((error) => {
+									alert('Plugin Install Failed')	
+								});
+							})
+						);
+						break;
+				}
+			}
+
+			return;
+		};
+
 		jQuery( function( $ ) {
 			$( 'div.notice.install-gutenverse-plugin-notice' ).on( 'click', 'button.notice-dismiss', function( event ) {
 				event.preventDefault();
-
 				$.post( ajaxurl, {
-					action: 'zeever_set_admin_notice_viewed'
+					action: 'zeever_set_admin_notice_viewed',
+					nonce: '<?php echo esc_html( wp_create_nonce( 'zeever_admin_notice' ) ); ?>',
 				} );
 			} );
+
+			$("#gutenverse-install-plugin").on('click', function(e) {
+				var hasFinishClass = $(this).hasClass('finished');
+				var hasLoaderClass = $(this).hasClass('loader');
+
+				if(!hasFinishClass) {
+					e.preventDefault();
+				}
+
+				if(!hasLoaderClass && !hasFinishClass) {
+					promises = [];
+					var plugins = <?php echo wp_json_encode( $plugins ); ?>;
+					$(this).addClass('loader').text('');
+
+					sequenceInstall(plugins);
+					Promise.all(promises).then(() => {						
+						$(this).removeClass('loader').addClass('finished').text('Visit Theme Dashboard');
+					});
+				}
+			});
 		} );
 		</script>
 		<div class="notice is-dismissible install-gutenverse-plugin-notice">
 			<div class="gutenverse-notice-inner">
 				<div class="gutenverse-notice-content">
-					<h3><?php esc_html_e( 'Thank you for installing Zeever!', 'zeever' ); ?></h3>
-					<p><?php esc_html_e( 'Zeever theme work best with Gutenverse plugin. By installing Gutenverse plugin you may access Zeever templates built with Gutenverse and get access to more than 40 free blocks.', 'zeever' ); ?></p>
-					<div class="gutenverse-bottom">
-						<a class="gutenverse-button" href="<?php echo esc_url( $button_link ); ?>">
-							<?php echo esc_html( $button_text ); ?>
-						</a>
-						<a target="__blank" href="https://gutenverse.com/">
-							<?php esc_html_e( 'More Info', 'zeever' ); ?>
-							<span class="dashicons dashicons-arrow-right-alt"></span>
-						</a>
+					<div class="gutenverse-notice-text">
+						<h3><?php esc_html_e( 'Take Your Website To New Height with', 'zeever' ); ?> <span>Gutenverse!</span></h3> 
+						<p><?php esc_html_e( 'Zeever theme work best with Gutenverse plugin. By installing Gutenverse plugin you may access Zeever templates built with Gutenverse and get access to more than 40 free blocks, hundred free Layout and Section.', 'zeever' ); ?></p>
+						<div class="gutenverse-bottom">
+							<a class="gutenverse-button" id="gutenverse-install-plugin" href="<?php echo esc_url( $button_link ); ?>">
+								<?php echo esc_html( $button_text ); ?>
+							</a>
+						</div>
+					</div>
+					<div class="gutenverse-notice-image">
+						<img src="<?php echo esc_url( ZEEVER_URI . '/assets/img/banner-install-gutenverse-2.png' ); ?>"/>
 					</div>
 				</div>
 			</div>
@@ -958,8 +1158,8 @@ class Init {
 	 */
 	public function admin_menu() {
 		add_theme_page(
-			'Zeever Template',
-			'Zeever Template',
+			'Zeever Dashboard',
+			'Zeever Dashboard',
 			'manage_options',
 			'zeever-dashboard',
 			array( $this, 'load_zeever_dashboard' ),
@@ -1060,7 +1260,7 @@ class Init {
 	/**
 	 * Enqueue scripts and styles.
 	 */
-	public function dashboard_scripts() {
+	public function backend_scripts() {
 		$screen = get_current_screen();
 
 		wp_enqueue_style(
@@ -1069,6 +1269,8 @@ class Init {
 			array(),
 			ZEEVER_URI
 		);
+
+		wp_enqueue_script( 'wp-api' );
 
 		if ( $screen->id === 'appearance_page_zeever-dashboard' ) {
 			// enqueue css.
@@ -1098,7 +1300,7 @@ class Init {
 	public function theme_config() {
 		return array(
 			'demo'    => esc_url( 'https:/gutenverse.com/demo?name=zeever' ),
-			'pages'        => array(
+			'pages'   => array(
 				'home'     => ZEEVER_URI . '/assets/img/page-home.webp',
 				'about'    => ZEEVER_URI . '/assets/img/page-about.webp',
 				'projects' => ZEEVER_URI . '/assets/img/page-projects.webp',
