@@ -33,28 +33,21 @@ class Setup_Task extends Task {
 			Util::debug_log( 'Creating archive directory: ' . $archive_dir );
 			$create_dir = wp_mkdir_p( $archive_dir );
 			if ( $create_dir === false ) {
-				return new \WP_Error( 'cannot_create_archive_dir', sprintf(__('Cannot create archive directory %s'), $archive_dir) );
+				return new \WP_Error( 'cannot_create_archive_dir', sprintf( __( 'Cannot create archive directory %s' ), $archive_dir ) );
 			}
 		}
 
-		// TODO: Add a way for the user to perform this, optionally, so that we
-		// don't need to do it every time. Then enable the two commented-out
-		// sections below.
 		$use_single = get_option( 'simply-static-use-single' );
 		$use_build  = get_option( 'simply-static-use-build' );
+		$type       = $this->options->get( 'generate_type' );
 
-		if ( empty( $use_build ) && empty( $use_single ) ) {
-			Page::query()->delete_all();
+		if ( ! $type ) {
+			$type = 'export';
 		}
 
-		// clear out any saved error messages on pages
-		//Page::query()
-		//->update_all( 'error_message', null );
-
-		// delete pages that we can't process
-		//Page::query()
-		//->where( 'http_status_code IS NULL OR http_status_code NOT IN (?)', implode( ',', Page::$processable_status_codes ) )
-		//->delete_all();
+		if ( empty( $use_build ) && empty( $use_single ) && 'export' === $type ) {
+			Page::query()->delete_all();
+		}
 
 		// add origin url and additional urls/files to database.
 		$additional_urls = apply_filters( 'ss_setup_task_additional_urls', $this->options->get( 'additional_urls' ) );
@@ -82,20 +75,7 @@ class Setup_Task extends Task {
 		$static_page->found_on_id = 0;
 		$static_page->save();
 
-		$urls = array_unique( Util::string_to_array( $additional_urls ) );
-
-		// Add additional URls for SimplyCDN integration.
-		$options = get_option( 'simply-static' );
-
-		if ( isset( $options['ssh_404_page_id'] ) ) {
-			$urls[] = get_permalink( $options['ssh_404_page_id'] );
-		}
-
-		if ( isset( $options['ssh_thank_you_page_id'] ) ) {
-			$urls[] = get_permalink( $options['ssh_thank_you_page_id'] );
-		}
-
-		$urls = apply_filters( 'ss_additional_urls', $urls );
+		$urls = apply_filters( 'ss_additional_urls', array_unique( Util::string_to_array( $additional_urls ) ) );
 
 		foreach ( $urls as $url ) {
 			if ( Util::is_local_url( $url ) ) {
@@ -116,14 +96,13 @@ class Setup_Task extends Task {
 	 * @return void
 	 */
 	public static function add_additional_files_to_db( $additional_files ) {
-
 		$additional_files = apply_filters( 'ss_additional_files', Util::string_to_array( $additional_files ) );
 
-		// Add additional files for SimplyCDN integration.
-		$options = get_option( 'simply-static' );
+		// Add robots.txt if exists.
+		$robots_txt = ABSPATH . 'robots.txt';
 
-		if ( isset( $options['ssh_use_forms'] ) ) {
-			$additional_files[] = SIMPLY_STATIC_PATH . '/src/integrations/simply-cdn/assets/ssh-form-webhook.js';
+		if ( file_exists( $robots_txt ) ) {
+			$additional_files[] = $robots_txt;
 		}
 
 		// Convert additional files to URLs and add to queue.
@@ -192,7 +171,7 @@ class Setup_Task extends Task {
 		$options = Options::instance();
 		$dir     = $options->get( 'temp_files_dir' );
 
-		if ( false === file_exists( $dir ) ) {
+		if ( false === file_exists( $dir ) || 'update' === $options->get( 'generate_type' ) ) {
 			return false;
 		}
 

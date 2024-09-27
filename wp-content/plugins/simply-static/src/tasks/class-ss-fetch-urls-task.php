@@ -15,6 +15,20 @@ class Fetch_Urls_Task extends Task {
 	public static $task_name = 'fetch_urls';
 
 	/**
+	 * The path to the archive directory.
+	 *
+	 * @var string
+	 */
+	public string $archive_dir;
+
+	/**
+	 * The time the archive was started.
+	 *
+	 * @var string
+	 */
+	public string $archive_start_time;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -116,6 +130,7 @@ class Fetch_Urls_Task extends Task {
 
 		// if we haven't processed any additional pages, we're done.
 		if ( $pages_remaining == 0 ) {
+			$this->add_feed_redirect();
 			do_action( 'ss_finished_fetching_pages' );
 		}
 
@@ -126,7 +141,7 @@ class Fetch_Urls_Task extends Task {
 	/**
 	 * Process the response for a 200 response (success)
 	 *
-	 * @param Simply_Static\Page $static_page Record to update.
+	 * @param \Simply_Static\Page $static_page Record to update.
 	 * @param boolean $save_file Save a static copy of the page.
 	 * @param boolean $follow_urls Save found URLs to database.
 	 *
@@ -185,7 +200,6 @@ class Fetch_Urls_Task extends Task {
 		$destination_url = $this->options->get_destination_url();
 		$current_url     = $static_page->url;
 		$redirect_url    = remove_query_arg( 'simply_static_page', $static_page->redirect_url );
-
 
 		Util::debug_log( "redirect_url: " . $redirect_url );
 
@@ -275,6 +289,10 @@ class Fetch_Urls_Task extends Task {
 			}
 		}
 
+		if ( $excluded ) {
+			$excluded = array_filter( $excluded );
+		}
+
 		if ( ! empty( $excluded ) ) {
 			foreach ( $excluded as $excludable ) {
 				$url = $static_page->url;
@@ -342,6 +360,37 @@ class Fetch_Urls_Task extends Task {
 			}
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * Add a redirect for the feed.
+	 *
+	 * @return void
+	 */
+	public function add_feed_redirect() {
+		$feed_dir = untrailingslashit( $this->archive_dir ) . '/feed/';
+
+		// Directory exists?
+		if ( is_dir( $feed_dir ) ) {
+			$feed_index_html_file = $feed_dir . 'index.html';
+
+			// Create index.html file
+			file_put_contents( $feed_index_html_file,
+				'<!DOCTYPE html>
+			<html>
+				<head>
+					<title>Redirecting...</title>
+					<meta http-equiv="refresh" content="0;url=index.xml">
+				</head>
+				<body>
+					<script type="text/javascript">
+						window.location = "index.xml";
+					</script>
+					<p>You are being redirected to <a href="index.xml">index.xml</a></p>
+				</body>
+			</html>'
+			);
 		}
 	}
 }

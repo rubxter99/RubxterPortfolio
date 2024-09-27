@@ -214,12 +214,28 @@ class WPCode_Snippet {
 	public $attributes;
 
 	/**
+	 * Whether this snippet should be loaded as a file, specific to CSS and JS snippets.
+	 *
+	 * @var bool
+	 */
+	public $load_as_file;
+
+	/**
+	 * The last time the snippet was modified.
+	 *
+	 * @var int
+	 */
+	public $modified;
+
+	/**
 	 * Constructor. If the post passed is not the correct post type
 	 * the object will clear itself.
 	 *
 	 * @param array|int|WP_Post $snippet Load a snippet by id, WP_Post or array.
 	 */
 	public function __construct( $snippet ) {
+		$snippet = apply_filters( 'wpcode_load_snippet', $snippet );
+
 		if ( is_int( $snippet ) ) {
 			$this->load_from_id( $snippet );
 		} elseif ( $snippet instanceof WP_Post ) {
@@ -426,6 +442,13 @@ class WPCode_Snippet {
 	 * @return int|false
 	 */
 	public function save() {
+
+		// Allow to prevent saving the snippet.
+		$pre_save = apply_filters( 'wpcode_pre_save_snippet', false, $this );
+		if ( false !== $pre_save ) {
+			return $pre_save;
+		}
+
 		$post_args = array(
 			'post_type' => $this->post_type,
 		);
@@ -556,6 +579,9 @@ class WPCode_Snippet {
 		if ( isset( $this->shortcode_attributes ) ) {
 			update_post_meta( $this->id, '_wpcode_shortcode_attributes', $this->shortcode_attributes );
 		}
+		if ( isset( $this->load_as_file ) && in_array( $this->get_code_type(), array( 'css', 'js' ), true ) ) {
+			update_post_meta( $this->id, '_wpcode_load_as_file', $this->load_as_file );
+		}
 
 		/**
 		 * Run extra logic after the snippet is saved.
@@ -565,9 +591,18 @@ class WPCode_Snippet {
 		 */
 		do_action( 'wpcode_snippet_after_update', $this->id, $this );
 
-		wpcode()->cache->cache_all_loaded_snippets();
+		$this->rebuild_cache();
 
 		return $this->id;
+	}
+
+	/**
+	 * Method for rebuilding all snippets cache.
+	 *
+	 * @return void
+	 */
+	public function rebuild_cache() {
+		wpcode()->cache->cache_all_loaded_snippets();
 	}
 
 	/**
@@ -668,6 +703,12 @@ class WPCode_Snippet {
 	public function force_deactivate() {
 		global $wpdb;
 
+		// Add a filter so we can hijack the deactivate logic if needed.
+		$force_deactivate = apply_filters( 'wpcode_force_deactivate_snippet', false, $this );
+		if ( false !== $force_deactivate ) {
+			return;
+		}
+
 		// We need to make a direct call as using wp_update_post will load the post content and if the current user
 		// doesn't have the unfiltered_html capability, the code will be changed unexpectedly.
 		$update = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -682,7 +723,7 @@ class WPCode_Snippet {
 
 		if ( $update ) {
 			// Rebuild cache to avoid the snippet being loaded again.
-			wpcode()->cache->cache_all_loaded_snippets();
+			$this->rebuild_cache();
 
 			wpcode()->error->add_error(
 				array(
@@ -868,6 +909,12 @@ class WPCode_Snippet {
 	 * @return array
 	 */
 	public function get_data_for_caching() {
+		$modified  = 0;
+		$post_data = $this->get_post_data();
+		if ( ! is_null( $post_data ) ) {
+			$modified = $post_data->post_modified;
+		}
+
 		return array(
 			'id'                   => $this->get_id(),
 			'title'                => $this->get_title(),
@@ -881,6 +928,7 @@ class WPCode_Snippet {
 			'priority'             => $this->get_priority(),
 			'location_extra'       => $this->get_location_extra(),
 			'shortcode_attributes' => $this->get_shortcode_attributes(),
+			'modified'             => $modified,
 		);
 	}
 
@@ -1071,6 +1119,9 @@ class WPCode_Snippet {
 		$this->title = $this->get_title() . ' - Copy';
 		// Make sure the snippet is not active.
 		$this->post_data->post_status = 'draft';
+
+		// Let's make sure the slashes don't get removed from the code.
+		$this->code = wp_slash( $this->code );
 		/**
 		 * Fires before a snippet that is about to be duplicated is saved.
 		 *
@@ -1087,5 +1138,48 @@ class WPCode_Snippet {
 		 * @param WPCode_Snippet $snippet The snippet object.
 		 */
 		do_action( 'wpcode_after_snippet_duplicated', $this );
+	}
+
+	/**
+	 * Get the edit url for this snippet.
+	 *
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=wpcode-snippet-manager&snippet_id=' . absint( $this->get_id() ) );
+	}
+
+	/**
+	 * Whether this snippet should be load as a file (for JS or CSS snippets, returns false for other code types).
+	 *
+	 * @return bool
+	 */
+	public function get_load_as_file() {
+		if ( ! isset( $this->load_as_file ) ) {
+			$this->load_as_file = in_array( $this->get_code_type(), array( 'js', 'css' ), true );
+			if ( $this->load_as_file ) {
+				$this->load_as_file = boolval( get_post_meta( $this->get_id(), '_wpcode_load_as_file', true ) );
+			}
+		}
+
+		return $this->load_as_file;
+	}
+
+	/**
+	 * Execute a snippet on demand.
+	 *
+	 * @param bool $ignore_conditional_logic Whether to ignore the conditional logic rules.
+	 *
+	 * @return void
+	 */
+	public function execute( $ignore_conditional_logic = false ) {
+
+		if ( ! $ignore_conditional_logic ) {
+			if ( $this->conditional_rules_enabled() && ! wpcode()->conditional_logic->are_snippet_rules_met( $this ) ) {
+				return;
+			}
+		}
+
+		wpcode()->execute->get_snippet_output( $this );
 	}
 }

@@ -35,31 +35,13 @@ class Util {
 	 * @return string home URL
 	 */
 	public static function origin_url() {
+		$options = Options::instance();
+
+		if ( $options->get( 'origin_url' ) ) {
+			return apply_filters( 'ss_origin_url', esc_url( untrailingslashit( $options->get( 'origin_url' ) ) ) );
+		}
+
 		return apply_filters( 'ss_origin_url', untrailingslashit( home_url() ) );
-	}
-
-	/**
-	 * Wrapper around site_url(). Returns the URL used for the WP installation.
-	 * @return string home URL
-	 */
-	public static function wp_installation_url() {
-		return untrailingslashit( site_url() );
-	}
-
-	/**
-	 * Echo the selected value for an option tag if the statement is true.
-	 * @return null
-	 */
-	public static function selected_if( $statement ) {
-		echo( $statement == true ? 'selected="selected"' : '' );
-	}
-
-	/**
-	 * Echo the checked value for an input tag if the statement is true.
-	 * @return null
-	 */
-	public static function checked_if( $statement ) {
-		echo( $statement == true ? 'checked="checked"' : '' );
 	}
 
 	/**
@@ -68,14 +50,6 @@ class Util {
 	 */
 	public static function truncate( $string, $length = 30, $omission = '...' ) {
 		return ( strlen( $string ) > $length + 3 ) ? ( substr( $string, 0, $length ) . $omission ) : $string;
-	}
-
-	/**
-	 * Use trailingslashit unless the string is empty
-	 * @return string
-	 */
-	public static function trailingslashit_unless_blank( $string ) {
-		return $string === '' ? $string : trailingslashit( $string );
 	}
 
 	/**
@@ -91,13 +65,14 @@ class Util {
 	}
 
 	/**
-	 * Delete the debug log
+	 * Clear the debug log
 	 * @return void
 	 */
-	public static function delete_debug_log() {
+	public static function clear_debug_log() {
 		$debug_file = self::get_debug_log_filename();
 		if ( file_exists( $debug_file ) ) {
-			unlink( $debug_file );
+			// Clear file
+			file_put_contents( $debug_file, '' );
 		}
 	}
 
@@ -144,7 +119,33 @@ class Util {
 	 * @return string Filename for the debug log
 	 */
 	public static function get_debug_log_filename() {
-		return plugin_dir_path( dirname( __FILE__ ) ) . 'debug.txt';
+		// Get directories.
+		$uploads_dir       = wp_upload_dir();
+		$simply_static_dir = $uploads_dir['basedir'] . DIRECTORY_SEPARATOR . 'simply-static' . DIRECTORY_SEPARATOR;
+
+		// Set name for debug file.
+		$options = get_option( 'simply-static' );
+
+		if ( isset( $options['encryption_key'] ) ) {
+			$htaccess_file = get_home_path() . '.htaccess';
+
+			if ( file_exists( $htaccess_file ) && ! is_multisite() ) {
+				// Set up log file path.
+				$log_file = untrailingslashit( $simply_static_dir ) . DIRECTORY_SEPARATOR . $options['encryption_key'] . '-debug.txt';
+
+				// Write to .htaccess file.
+				$htaccess_inner_content = "\nrequire all denied\nrequire host localhost\n";
+				$htaccess_file_content  = '<Files "' . $log_file . '">' . $htaccess_inner_content . '</Files>';
+
+				if ( file_exists( $log_file ) ) {
+					insert_with_markers( $htaccess_file, 'Simply Static', $htaccess_file_content );
+				}
+			}
+
+			return $simply_static_dir . $options['encryption_key'] . '-debug.txt';
+		} else {
+			return $simply_static_dir . 'debug.txt';
+		}
 	}
 
 	/**
@@ -167,14 +168,14 @@ class Util {
 		return $contents;
 	}
 
-    public static function is_valid_scheme( $scheme ) {
-        $valid_schemes = apply_filters( 'simply_static_valid_schemes', [
-           'http',
-           'https',
-        ]);
+	public static function is_valid_scheme( $scheme ) {
+		$valid_schemes = apply_filters( 'simply_static_valid_schemes', [
+			'http',
+			'https',
+		] );
 
-        return in_array( $scheme, $valid_schemes );
-    }
+		return in_array( $scheme, $valid_schemes );
+	}
 
 	/**
 	 * Given a URL extracted from a page, return an absolute URL
@@ -229,9 +230,9 @@ class Util {
 
 		// if no path, check for an ending slash; if there isn't one, add one
 		if ( ! isset( $parsed_extracted_url['path'] ) ) {
-            if ( isset( $parsed_extracted_url['scheme'] ) && ! self::is_valid_scheme( $parsed_extracted_url['scheme'] ) ) {
-                return $extracted_url;
-            }
+			if ( isset( $parsed_extracted_url['scheme'] ) && ! self::is_valid_scheme( $parsed_extracted_url['scheme'] ) ) {
+				return $extracted_url;
+			}
 			$clean_url     = self::remove_params_and_fragment( $extracted_url );
 			$fragment      = substr( $extracted_url, strlen( $clean_url ) );
 			$extracted_url = trailingslashit( $clean_url ) . $fragment;
@@ -309,7 +310,7 @@ class Util {
 	 * @return boolean      true if URL is local, false otherwise
 	 */
 	public static function is_local_url( $url ) {
-		return ( stripos( self::strip_protocol_from_url( $url ), self::origin_host() ) === 0 );
+		return apply_filters( 'ss_is_local_url', ( stripos( self::strip_protocol_from_url( $url ), self::origin_host() ) === 0 ) );
 	}
 
 	/**
@@ -465,11 +466,21 @@ class Util {
 			'jpeg',
 			'png',
 			'svg',
+			'mp4',
+			'webm',
+			'ogg',
+			'ogv',
+			'mp3',
+			'wav',
 			'json',
 			'js',
 			'css',
 			'xml',
-		]);
+			'csv',
+			'pdf',
+			'txt',
+			'cur'
+		] );
 
 		$path_info = self::url_path_info( $url );
 
@@ -496,15 +507,6 @@ class Util {
 	 */
 	public static function remove_trailing_directory_separator( $path ) {
 		return rtrim( $path, DIRECTORY_SEPARATOR );
-	}
-
-	/**
-	 * Ensure there is a single leading directory separator on the path
-	 *
-	 * @param string $path File path to add leading directory separator to
-	 */
-	public static function add_leading_directory_separator( $path ) {
-		return DIRECTORY_SEPARATOR . self::remove_leading_directory_separator( $path );
 	}
 
 	/**
@@ -541,9 +543,13 @@ class Util {
 	 * @param string $task_name Name of the task
 	 * @param string $message Message to display about the status of the job
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public static function add_archive_status_message( $messages, $task_name, $message ) {
+		if ( ! is_array( $messages ) ) {
+			$messages = array();
+		}
+
 		// if the state exists, set the datetime and message
 		if ( ! array_key_exists( $task_name, $messages ) ) {
 			$messages[ $task_name ] = array(
@@ -606,5 +612,88 @@ class Util {
 	 */
 	public static function normalize_slashes( string $path ): string {
 		return strpos( $path, '\\' ) !== false ? str_replace( '\\', '/', $path ) : $path;
+	}
+
+	/**
+	 * Returns the global $wp_filesystem with credentials set.
+	 * Returns null in case of any errors.
+	 *
+	 * @return \WP_Filesystem_Base|null
+	 */
+	public static function get_file_system() {
+		global $wp_filesystem;
+
+		$success = true;
+
+		// Initialize the file system if it has not been done yet.
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+
+			$constants = array(
+				'hostname'    => 'FTP_HOST',
+				'username'    => 'FTP_USER',
+				'password'    => 'FTP_PASS',
+				'public_key'  => 'FTP_PUBKEY',
+				'private_key' => 'FTP_PRIKEY',
+			);
+
+			$credentials = array();
+
+			// We provide credentials based on wp-config.php constants.
+			// Reference https://developer.wordpress.org/apis/wp-config-php/#wordpress-upgrade-constants
+			foreach ( $constants as $key => $constant ) {
+				if ( defined( $constant ) ) {
+					$credentials[ $key ] = constant( $constant );
+				}
+			}
+
+			$success = WP_Filesystem( $credentials );
+		}
+
+		if ( ! $success || $wp_filesystem->errors->has_errors() ) {
+			return null;
+		}
+
+		return $wp_filesystem;
+	}
+
+	/**
+	 * Clear all transients used in Simply Static.
+	 *
+	 * @return void
+	 */
+	public static function clear_transients() {
+		// Diagnostics.
+		delete_transient( 'simply_static_checks' );
+		delete_transient( 'simply_static_failed_tests' );
+
+		// Tasks.
+		$tasks = [
+			'fetch_urls',
+			'search',
+			'minify',
+			'optimize_directories',
+			'shortpixel',
+			'shortpixel_download',
+			'aws_empty',
+			'create_zip_archive',
+			'transfer_files_locally',
+			'github_commit',
+			'bunny_deploy',
+			'tiiny_deploy',
+			'aws_deploy',
+			'sftp_deploy',
+			'simply_cdn'
+		];
+
+		foreach( $tasks as $task ) {
+			delete_transient( 'simply_static_' . $task . '_total_pages' );
+		}
+
+		// Misc.
+		delete_transient( 'ssp_sftp_deploy_start_time' );
+		delete_transient( 'ssp_search_index_start_time' );
+		delete_transient( 'ssp_github_blobs' );
+		delete_transient( 'ssp_search_results' );
 	}
 }

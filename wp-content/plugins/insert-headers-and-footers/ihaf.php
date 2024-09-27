@@ -2,10 +2,10 @@
 /**
  * Plugin Name: WPCode Lite
  * Plugin URI: https://www.wpcode.com/
- * Version: 2.1.4.1
+ * Version: 2.2.2
  * Requires at least: 4.6
  * Requires PHP: 5.5
- * Tested up to: 6.3
+ * Tested up to: 6.6
  * Author: WPCode
  * Author URI: https://www.wpcode.com/
  * Description: Easily add code snippets in WordPress. Insert scripts to the header and footer, add PHP code snippets with conditional logic, insert ads pixel, custom content, and more.
@@ -294,8 +294,6 @@ class WPCode {
 		$this->setup_constants();
 		$this->includes();
 		add_action( 'plugins_loaded', array( $this, 'load_components' ), - 1 );
-
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 15 );
 	}
 
 	/**
@@ -393,10 +391,24 @@ class WPCode {
 			require_once WPCODE_PLUGIN_PATH . 'includes/admin/class-wpcode-admin-notice.php';
 			// Ask for some love.
 			require_once WPCODE_PLUGIN_PATH . 'includes/admin/class-wpcode-review.php';
+			// Suggest free plugins.
+			require_once WPCODE_PLUGIN_PATH . 'includes/admin/class-wpcode-suggested-plugins.php';
 		}
 
 		// Load lite-specific files.
 		require_once WPCODE_PLUGIN_PATH . 'includes/lite/loader.php';
+	}
+
+	/**
+	 * Load the Generator on demand.
+	 *
+	 * @return WPCode_Generator
+	 */
+	public function generator() {
+		if ( ! isset( $this->generator ) ) {
+			$this->generator = new WPCode_Generator();
+		}
+		return $this->generator;
 	}
 
 	/**
@@ -417,7 +429,6 @@ class WPCode {
 			$this->file_cache        = new WPCode_File_Cache();
 			$this->library           = new WPCode_Library();
 			$this->library_auth      = new WPCode_Library_Auth();
-			$this->generator         = new WPCode_Generator();
 			$this->importers         = new WPCode_Importers();
 			$this->notifications     = new WPCode_Notifications();
 			$this->admin_page_loader = new WPCode_Admin_Page_Loader_Lite();
@@ -428,24 +439,16 @@ class WPCode {
 			new WPCode_Metabox_Snippets_Lite();
 			// Usage tracking class.
 			new WPCode_Usage_Tracking_Lite();
+			// Suggested plugins.
+			new WPCode_Suggested_Plugins();
 		}
 
 		new WPCode_Admin_Bar_Info_Lite();
 
 		do_action( 'wpcode_loaded' );
-	}
 
-	/**
-	 * Load the plugin translations.
-	 *
-	 * @return void
-	 */
-	public function load_plugin_textdomain() {
-		if ( is_user_logged_in() ) {
-			unload_textdomain( 'insert-headers-and-footers' );
-		}
-
-		load_plugin_textdomain( 'insert-headers-and-footers', false, dirname( plugin_basename( WPCODE_FILE ) ) . '/languages/' );
+		// Load the pluggable functions late to allow plugins to hook in.
+		require_once WPCODE_PLUGIN_PATH . 'includes/pluggable.php';
 	}
 }
 

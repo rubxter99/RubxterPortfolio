@@ -1,10 +1,10 @@
-=== Simply Static ===
+=== Simply Static - The WordPress Static Site Generator ===
 Contributors: patrickposner
-Tags: HTML, static website generator, static site, secure, fast
-Requires at least: 6.2
-Tested up to: 6.3
+Tags: static site generator, performance, security, jamstack
+Requires at least: 6.3
+Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 3.1.1
+Stable tag: 3.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,7 +51,7 @@ I highly recommend not to use another tool for local development if you are not 
 
 The pro version of Simply Static enhances the plugin with various features.
 
-[youtube https://www.youtube.com/watch?v=PTuw1ChYCdI]
+[youtube https://youtu.be/Vml537IIwVc]
 
 = GitHub Integration =
 
@@ -65,33 +65,39 @@ This allows deploying your static website to:
 * Cloudflare Pages
 * Netlify
 * Vercel
-* SFTP to your server
 
-
-= AWS S3 Integration & Digital Ocean Spaces Integration =
+= AWS S3 Integration =
 
 Export directly to Amazon AWS S3 from Simply Static Pro. Connect your bucket and run your export.
 
+= SFTP =
+
+Export directly to a remote SFTP server. Connect your server and run your export.
 
 = BunnyCDN Integration =
 
 Export directly to BunnyCDN and get all the benefits of their CDN - including caching, file optimization and DNS management.
 
 
-= Builds and Single Exports =
+= Incremental-, Builds and Single Exports =
 
-Create builds to export only a subset of pages/posts. You can assign a build to every custom post type in your WordPress admin area and export them.
+Use Incremental Exports to update only changes to your static website. No configuration needed, just choose Update and run the export.
 
-Never sit back and watch a full static export running, instead run a complete export once and then use builds to export the changes as fast as possible.
+Use Build Exports to quickly roll out global changes to your static website. Want to update your style.css file? Or a new plugin? Use a build export.
 
-You can also export single pages/posts after changed something.
-
+Use Single Exports to quickly publish new pages and posts to your static site. This also supports scheduled posts.
 
 = Forms =
 
-Simply Static Pro supports Contact Form 7 and Gravity Forms to use on your static website.
+Create and use forms created with your favorite form plugin on your static website with Simply Static Pro. Supported plugins are:
 
-You can decide if you want to use an external service like Zapier and IFTTT or if your original WordPress website should handle the submission and send you an e-mail with all the details.
+* Contact Form 7
+* Gravity Forms
+* WP Forms
+* FluentForms
+* WS Forms
+
+You can decide if you want to use an external service like Zapier and IFTTT to offload the submission (webhook) or embed the form from your WordPress website via iFrame.
 
 
 = Search =
@@ -121,45 +127,64 @@ Simply Static Pro has a detailed and comprehensive integration with WP-CLI.
 
 Control every option, run different kinds of exports and more with the WP-CLI integration.
 
-
-= Multisite =
-
-Export your entire network, subsites, change settings on the network level and more.
-
-The multisite integration of Simply Static Pro brings your static network to the next level.
-
-
 = Minification =
 
 Automatically minfiy HTML, CSS and JavaScript files on your static site.
 
 We can even minify inline CSS & JavaScript.
 
+= Image Optimization =
+
+Automatically optimize images on your static website with our ShortPixel API integration.
+
+= Optimization =
+
+Replace default WordPress paths and completely hide that you are using WordPress behind the scenes.
+
+Replace:
+
+* wp-content
+* wp-includes
+* wp-content/plugins/
+* wp-content/themes/
+* wp-content/uploads/
+
+
+Hide & Disable:
+
+Disabled unwanted features in WordPress before running an static export like:
+
+* XML-RPC
+* REST API URLs
+* Emoji support
+* Shortlink support
+* WordPress version in HTML
+
+and much more.
 
 = Get the Pro version =
 
-You can get the pro version [here](https://simplystatic.com/simply-static-pro/).
+You can get the pro version [here](https://simplystatic.com/pro/).
 
-== webtozip ==
+= Simply Static Course =
 
-We also developed a service called [webtozip.com](https://webtozip.com/).
+We created an entire video course about Static WordPress with Simply Static - check out the first video:
 
-If all you need is an archive of an existing WordPress website and you don't want to switch to a static site setup, we highly recommend using it instead of Simply Static.
+[youtube https://youtu.be/Ei_w-Jcq4uQ]
 
-Here are the benefits:
-
-* it runs remotely (not on your server)
-* it is probably faster than running it on your own server
-* you don't have to worry about your WordPress version or your PHP version
-* you get the download link to the ZIP file via e-mail (no need for writing access on your server)
-
-It uses the same codebase as Simply Static but is not a plugin. It is a service that runs on our servers.
+You can watch the entire course entirely for free on YouTube here: [Simply Static Course](https://www.youtube.com/playlist?list=PLcpe8_rNg8U5g1gCOa0Ge6T17f50nSvmg)
 
 = Tutorials =
 
-I publish new tutorials on how to work with Simply Static and other tools on my blog.
+We also publish new tutorials on our blog every other week on how to work with Simply Static and other static site tools.
 
-You can check the current tutorials [here](https://simplystatic.com/tutorials/)
+You can check the latest tutorials [here](https://simplystatic.com/tutorials/)
+
+= Documentation =
+
+We have a super extensive documentation that covers every aspect of Simply Static and Simply Static Pro.
+
+You can check the documentation [here](https://docs.simplystatic.com)
 
 
 == Installation ==
@@ -221,6 +246,159 @@ Simply Static creates a static copy of your WordPress site that is intended to b
 3. Diagnostics
 
 == Changelog ==
+
+= 3.1.9 =
+
+* simplified process_pages class abstraction
+* fixed stripping quotes on HTML extraction
+* added security.md file to repo for updates via CLI
+* use TEXT instead of JSON in our DB table for SQLite (Playground) support
+* added default value for per_page parameter
+* removed deprecated SimplyCDN integration
+* fixed path resolving for /feed/ URLs
+* restricted redirects includes to full or update exports
+* set a recognizable User Agent for wp_remote_get requests
+* avoid checking against NULL for content_type (PHP 8.3 support)
+
+= 3.1.8.1 =
+
+* turn off notifications on MU network settings
+* improved MU subsite checkups
+
+= 3.1.8 =
+
+* several admin UI improvements
+* added tutorial videos for all major features
+* added a new DB column to store JSON data (for future features)
+* improved and fixed transient handling and expiration
+* added support for redirects with Redirection, Yoast and RankMath
+* auto-replace URLs in schema.org JSON-LD data from Yoast and RankMath
+* fixed typos in admin UI
+* removed SSL check from diagnostics (no longer needed)
+* added test deploy function
+* remove deprecated basic_auth_digest function
+* extended match_tags list for SVGs and other tags
+* more failsafe parsing with innerhtmlKeep instead of innerText (crawler)
+
+= 3.1.7.4 =
+
+* fixed PHP notice related to server_cron setting
+* fixed basic auth validation in admin area
+
+= 3.1.7.3 =
+
+* added new integration settings page
+* added admin bar as integration + toggle to enable/disable it
+* improved performance for diagnostics check (caching)
+* removed unused http_request_args filter
+* MU network page UI fixes
+* added quick links to plugins page
+* added option to whitelist plugins in diagnostics
+* restructed "Misc" settings and renamed to "Debug"
+* added option to use server-side cron job
+* adapted Jetpack integration to new integration class
+
+= 3.1.7.2 =
+
+* added Jetpack integration
+* removed DO integration admin UI code
+* added progress bar to admin bar
+* Diagnostics sub menu page + notification center
+* removed can_wp_make_requests_to_itself() check
+* fixed PHP notices for PHP 8.3 compatibility
+* simplified log file output for certain deployment options
+* composer dependencies updated
+
+
+= 3.1.7.1 =
+
+* improved hash validation for record storage in DB
+* smaller UI improvements
+* auto-generate index.html for feed URLs
+
+= 3.1.7 =
+
+* Official PHP 8.2 and 8.3 support + fixes for various PHP notices
+* fixed saving multiline settings savings process
+* improved default settings on first installation + reset
+* extended the match_tags list for better XML support
+* improved URL handling when creating 404 pages
+* automated 404 page handling for various deployment options
+* added cache detection solution as part of diagnostics
+* added incompatible plugin detection as part of diagnostics
+* added notification logic if tests in diagnostics fail
+* improved XML sitemap handling in all SEO integrations
+* auto-include robots.txt file if exists
+
+= 3.1.6.3 =
+
+* no more filesize limits on wp_remote_get()
+* removed empty settings page on network admin
+* improved various descriptions + added links to the documentation
+* added filter to set conditions before clearing local directory
+* avoid clearing special characters from Basic Auth credentials
+* auto-cancel export if Basic Auth is set and credentials don't match
+* improved default settings handling
+* extended plugin compatibility list up to 100 (from 30)
+* unified 404 page option for CDN exports
+
+= 3.1.6.2 =
+
+* new filter for extended DOM manipulation
+* fixed typos for optimization settings
+* exclude builds and single exports from clear directory
+
+= 3.1.6.1 =
+
+* modified default parameters for ss_remote_args filter (file size based on uploads limit)
+
+= 3.1.6 =
+
+* new multisite integration (network, import/export subsites)
+* improved 404 page handling
+* improved secure debug log handling
+* plugin compatibility database integration
+* admin UI improvements (labels, helper texts..)
+* updated translation files
+* improved version output in admin UI
+
+= 3.1.5 =
+
+* refactored additional settings
+* introduced setting for origin URL
+* removed unused helper methods
+* improved requests to itself check in diagnostics
+* improved sanitization for multiline fields
+* load textdomain in init hook instead of plugins_loaded
+* NPM packages updated to latest releases
+
+
+= 3.1.4 =
+
+* added log for replacing 404 pages
+* fix for 404 page in local directory exports
+* clear log before running new export to avoid big file sizes
+* extended ss_remote_args filter with async requests + max file size per request
+* improved sanitization for import/export settings
+* added filter for local URL check
+* improved secure log handling (dynamic filename + .htaccess rule)
+
+= 3.1.3 =
+
+* JS dependencies updated
+* refactored filter implementation for tasks
+* added check for empty strings in excludes
+* removed unused blog_id check
+* changed location of debug log to uploads dir
+* check for Rest API in diagnostics
+* increased PHP version for diagnostics >= 8.0
+* whitelist Freemius API calls if Basic Auth enabled
+
+= 3.1.2 =
+
+* WordPress 6.4 compatibility
+* Improved clearing logs
+* improved capability filter
 
 = 3.1.1 =
 

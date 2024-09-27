@@ -45,13 +45,16 @@ class Archive_Creation_Job extends \WP_Background_Process {
 	 */
 	public function __construct() {
 		$this->options   = Options::instance();
-		$this->task_list = apply_filters( 'simplystatic.archive_creation_job.task_list', array(), $this->options->get( 'delivery_method' ) );
 
 		if ( ! $this->is_job_done() ) {
 			register_shutdown_function( array( $this, 'shutdown_handler' ) );
 		}
 
 		parent::__construct();
+	}
+
+	public function get_task_list() {
+		return apply_filters( 'simplystatic.archive_creation_job.task_list', array(), $this->options->get( 'delivery_method' ) );
 	}
 
 	/**
@@ -67,28 +70,33 @@ class Archive_Creation_Job extends \WP_Background_Process {
 	 * Helper method for starting the Archive_Creation_Job
 	 * @return boolean true if we were able to successfully start generating an archive
 	 */
-	public function start( $blog_id = 0 ) {
-		if ( ! $blog_id ) {
-			$blog_id = get_current_blog_id();
-		}
+	public function start( $blog_id = 0, $type = 'export' ) {
+		// Clear log before running the job.
+		Util::clear_debug_log();
 
 		do_action( 'ss_archive_creation_job_before_start', $blog_id, $this );
 
 		if ( $this->is_job_done() ) {
 
+			$task_list = $this->get_task_list();
+
 			Util::debug_log( "Starting a job; no job is presently running" );
-			Util::debug_log( "Here's our task list: " . implode( ', ', $this->task_list ) );
+			Util::debug_log( "Here's our task list: " . implode( ', ', $task_list ) );
 
 			do_action( 'ss_archive_creation_job_before_start_queue', $blog_id, $this );
 
-			$first_task   = $this->task_list[0];
-			$archive_name = join( '-', array( Plugin::SLUG, $blog_id, time() ) );
+			$first_task   = $task_list[0];
+
+			if ( 'update' !== $type ) {
+				$archive_name = join( '-', array( Plugin::SLUG, $blog_id, time() ) );
+				$this->options->set( 'archive_name', $archive_name );
+			}
 
 			$this->options
 				->set( 'archive_status_messages', array() )
-				->set( 'archive_name', $archive_name )
 				->set( 'archive_start_time', Util::formatted_datetime() )
 				->set( 'archive_end_time', null )
+				->set( 'generate_type', $type )
 				->save();
 
 			Util::debug_log( "Pushing first task to queue: " . $first_task );
@@ -282,16 +290,17 @@ class Archive_Creation_Job extends \WP_Background_Process {
 	 */
 	protected function find_next_task() {
 		$task_name = $this->get_current_task();
-		$index     = array_search( $task_name, $this->task_list );
+		$task_list = $this->get_task_list();
+		$index     = array_search( $task_name, $task_list );
 		if ( $index === false ) {
 			return null;
 		}
 
 		$index += 1;
-		if ( ( $index ) >= count( $this->task_list ) ) {
+		if ( ( $index ) >= count( $task_list ) ) {
 			return null;
 		} else {
-			return $this->task_list[ $index ];
+			return $task_list[ $index ];
 		}
 	}
 
@@ -307,7 +316,7 @@ class Archive_Creation_Job extends \WP_Background_Process {
 	 *
 	 * @return void
 	 */
-    protected function save_status_message( $message, $key = null ) {
+    public function save_status_message( $message, $key = null ) {
         $task_name = $key ?: $this->get_current_task();
         $this->options
             ->add_status_message($message, $task_name)
